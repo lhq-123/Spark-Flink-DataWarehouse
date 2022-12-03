@@ -1,0 +1,114 @@
+用户行为日志数据:
+{
+	"common":{
+			"ar":"440000",
+			"ba":"iPhone",
+			"ch":"Appstore",
+			"is_new":"0",
+			"md":"iPhone X",
+			"mid":"mid_3442864",
+			"os":"iOS 12.4.1",
+			"uid":"928",
+			"vc":"v2.1.134"
+		},
+	"start":{
+		"entry":"icon",
+		"loading_time":1361,
+		"open_ad_id":17,
+		"open_ad_ms":2968,
+		"open_ad_skip_ms":0
+	},
+	"ts":1651303983000
+}
+
+FlinkCDC读取数据:
+{
+    "before":null,
+    "after":{
+        "source_table":"base_trademark",
+        "sink_table":"dim_base_trademark",
+        "sink_columns":"id,tm_name",
+        "sink_pk":"id",
+        "sink_extend":null
+    },
+    "source":{
+        "version":"1.5.4.Final",
+        "connector":"mysql",
+        "name":"mysql_binlog_source",
+        "ts_ms":1655172926148,
+        "snapshot":"false",
+        "db":"gmall-211227-config",
+        "sequence":null,
+        "table":"table_process",
+        "server_id":0,
+        "gtid":null,
+        "file":"",
+        "pos":0,
+        "row":0,
+        "thread":null,
+        "query":null
+    },
+    "op":"r",
+    "ts_ms":1655172926150,
+    "transaction":null
+}
+
+Maxwell数据格式:
+{
+    "database":"gmall",
+    "table":"cart_info",
+    "type":"update",
+    "ts":1592270938,
+    "xid":13090,
+    "xoffset":1573,
+    "data":{
+        "id":100924,
+        "user_id":"93",
+        "sku_id":16,
+        "cart_price":4488,
+        "sku_num":1,
+        "img_url":"http://47.93.148.192:8080/group1/M00/00/02/rBHu8l-sklaALrngAAHGDqdpFtU741.jpg",
+        "sku_name":"华为 HUAWEI P40 麒麟990 5G SoC芯片 5000万超感知徕卡三摄 30倍数字变焦 8GB+128GB亮黑色全网通5G手机",
+        "is_checked":null,
+        "create_time":"2020-06-14 09:28:57",
+        "operate_time":null,
+        "is_ordered":1,
+        "order_time":"2021-10-17 09:28:58",
+        "source_type":"2401",
+        "source_id":null
+    },
+    "old":{
+        "is_ordered":0,
+        "order_time":null
+    }
+}
+
+
+{
+"database": "gmall",
+"table": "table_process",
+"type": "insert",
+"ts": 1669777172,
+"xid": 9036,
+"commit": true,
+"data": {
+"source_table": "coupon_use",
+"operate_type": "insert",
+"sink_type": "kafka",
+"sink_table": "dwd_coupon_use",
+"sink_columns": "id,coupon_id,user_id,order_id,coupon_status,get_type,get_time,using_time,used_time,expire_time",
+"sink_pk": "id",
+"sink_extend": " SALT_BUCKETS \u003d 3"
+}
+}
+
+Maxwell数据过滤原则:
+保留的：
+{"database":"gmall-211126-flink","table":"base_trademark","type":"insert","ts":1652499161,"xid":167,"commit":true,"data":{"id":13,"tm_name":"atguigu","logo_url":"/aaa/aaa"}}
+{"database":"gmall-211126-flink","table":"base_trademark","type":"update","ts":1652499176,"xid":188,"commit":true,"data":{"id":13,"tm_name":"atguigu","logo_url":"/bbb/bbb"},"old":{"logo_url":"/aaa/aaa"}}
+{"database":"gmall-211126-flink","table":"base_trademark","type":"bootstrap-insert","ts":1652499295,"data":{"id":1,"tm_name":"三星","logo_url":"/static/default.jpg"}}
+
+过滤掉：
+{"database":"gmall-211126-flink","table":"base_trademark","type":"bootstrap-start","ts":1652499295,"data":{}}
+{"database":"gmall-211126-flink","table":"base_trademark","type":"bootstrap-complete","ts":1652499295,"data":{}}
+

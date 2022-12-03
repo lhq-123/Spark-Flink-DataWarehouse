@@ -1,0 +1,726 @@
+bin/kafka-console-consumer.sh --bootstrap-server hadoop102:9092 --topic 
+bin/kafka-console-producer.sh --broker-list hadoop102:9092 --topic 
+实时数仓分层:
+	计算框架:Flink;存储框架:消息队列(可以实时读取&可以实时写入)
+	ODS:Kafka
+		使用场景:每过来一条数据,读取到并加工处理
+	DIM:HBase
+		使用场景:事实表会根据主键获取一行维表数据(1.永久存储、2.根据主键查询)
+		HBase:海量数据永久存储,根据主键快速查询          √
+		Redis:用户表数据量大,内存数据库                 ×
+		ClickHouse:并发不行,列存                       ×
+		ES:默认给所有字段创建索引                       ×
+		Hive(HDFS):效率低下                            ×
+		Mysql本身:压力太大,实在要用就使用从库            √
+	DWD:Kafka
+		使用场景:每过来一条数据,读取到并分组累加处理
+	DWS:ClickHouse
+		使用场景:每过来一条数据,读取到并重新分组、累加处理
+	ADS:不落盘,实质上是接口模块中查询ClickHouse的SQL语句
+		使用场景:读取最终结果数据展示
+
+	DWS:用户、省份、商品  GMV
+	ADS:用户  GMV
+		省份  GMV
+		商品  GMV
+		省份、商品  GMV
+
+范式理论:关系型数据库使用的,增删改查
+	第一范式:属性不可分割,好处:为了可以计算
+	第二范式:不能存在部分函数依赖,好处:减少数据冗余
+	第三范式:不能存在传递函数依赖,好处:减少数据冗余、增加数据一致性
+			A --> B --> C & C -\-> A
+			学生 -> 系 -> 系主任
+
+维度建模
+	事实表:业务过程
+		事务事实表:一行数据代表一个业务过程,且不会发生改变了
+		周期快照事实表:会发生改变,一般只关心最终的数据结果状态,比如说余额
+		累积快照事实表:一行数据代表一个不完整的业务过程,会发生改变,且改变的内容是有限个
+	维度表:描述度量值得角度数据
+
+DIM层
+	读取数据:Kafka---topic_db(包含所有的46张业务表)
+
+	过滤数据:过滤出所需要的维表数据
+		过滤条件:在代码中给定十几张维表的表名
+		问题:如果增加维表,需要修改代码-重新编译-打包-上传、重启任务
+		优化1:不修改代码、只重启任务
+			配置信息中保存需要的维表信息,配置信息只在程序启动的时候加载一次
+		优化2:不修改代码、不重启任务
+			方向:让程序在启动以后还可以获取配置信息中增加的内容
+			具体实施:
+				1) 定时任务:每隔一段时间加载一次配置信息
+					将定时任务写在Open方法
+				2) 监控配置信息:一旦配置信息增加了数据,可以立马获取到
+					(1) MySQLBinlog:FlinkCDC监控直接创建流
+						a.将配置信息处理成广播流:缺点 -> 如果配置信息过大,冗余太多
+						b.按照表名进行KeyBy处理:缺点 -> 有可能产生数据倾斜
+					(2) 文件:Flume->Kafka->Flink消费创建流
+
+	写出数据:将数据写出到Phoenix
+		JdbcSink、自定义Sink
+
+Maxwell数据格式展示：
+ bin/maxwell-bootstrap --database gmall-211126-flink --table base_trademark --config ./config.properties
+保留的：
+{"database":"gmall-211126-flink","table":"base_trademark","type":"insert","ts":1652499161,"xid":167,"commit":true,"data":{"id":13,"tm_name":"atguigu","logo_url":"/aaa/aaa"}}
+{"database":"gmall-211126-flink","table":"base_trademark","type":"update","ts":1652499176,"xid":188,"commit":true,"data":{"id":13,"tm_name":"atguigu","logo_url":"/bbb/bbb"},"old":{"logo_url":"/aaa/aaa"}}
+{"database":"gmall-211126-flink","table":"base_trademark","type":"bootstrap-insert","ts":1652499295,"data":{"id":1,"tm_name":"三星","logo_url":"/static/default.jpg"}}
+
+过滤掉：
+{"database":"gmall-211126-flink","table":"base_trademark","type":"delete","ts":1652499184,"xid":201,"commit":true,"data":{"id":13,"tm_name":"atguigu","logo_url":"/bbb/bbb"}}
+{"database":"gmall-211126-flink","table":"base_trademark","type":"bootstrap-start","ts":1652499295,"data":{}}
+{"database":"gmall-211126-flink","table":"base_trademark","type":"bootstrap-complete","ts":1652499295,"data":{}}
+
+
+
+FlinkCDC读取配置信息表:
+	表名(主键)、列名(建表用)、是否是维表(没必要)
+
+	sourceTable:主流中的数据表名
+	sinkTable:Phoenix中的维表表名
+	columns:建表使用的字段名、过滤主流数据字段
+	sinkPk:建表使用的主键
+	sinkExtend:建表使用的扩展字段
+
+	数据格式：
+	{"before":null,"after":{"source_table":"aa","sink_table":"bb","sink_columns":"cc","sink_pk":"id","sink_extend":"xxx"},"source":{"version":"1.5.4.Final","connector":"mysql","name":"mysql_binlog_source","ts_ms":1652513039549,"snapshot":"false","db":"gmall-211126-config","sequence":null,"table":"table_process","server_id":0,"gtid":null,"file":"","pos":0,"row":0,"thread":null,"query":null},"op":"r","ts_ms":1652513039551,"transaction":null}
+
+id、tm_name
+
+create table aa(id varchar(255) primary key,name varchar(255));
+create table aa(id varchar(255) primary key,name varchar(255)) xxx=xxx;
+
+
+data:{"id":"1001","name":"aaa","tm_name":"bbb"}
+sinkColumns:"id,tm_name"
+
+create schema GMALL211126_REALTIME;
+
+
+DWD层:拆分！
+	日志数据:5种(启动、页面、曝光、动作、错误)---topic_log
+	消费ODS主题数据 --> 直接按照表拆分写入不同的主题 -> 消费不同主题数据关联 -> 写入Kafka主题
+
+	错误
+	启动
+	页面-(曝光、动作)
+
+	业务数据:N种(所有需要处理的事实表)---topic_db
+		订单表&订单明细表&订单明细购物券&订单明细活动表
+		维度退化
+	消费ODS主题数据 --> 使用程序过滤想要的数据并关联 -> 写入Kafka主题
+
+{"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"1","md":"iPhone Xs Max","mid":"mid_51315","os":"iOS 13.2.3","uid":"603","vc":"v2.1.132"},"start":{"entry":"notice","loading_time":1087,"open_ad_id":1,"open_ad_ms":9832,"open_ad_skip_ms":0},"ts":1651303983000}
+
+{"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"1","md":"iPhone Xs Max","mid":"mid_51315","os":"iOS 13.2.3","uid":"603","vc":"v2.1.132"},"start":{"entry":"notice","loading_time":1087,"open_ad_id":1,"open_ad_ms":9832,"open_ad_skip_ms":0},"ts":1651303984000}
+
+{"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"1","md":"iPhone Xs Max","mid":"mid_51315","os":"iOS 13.2.3","uid":"603","vc":"v2.1.132"},"start":{"entry":"notice","loading_time":1087,"open_ad_id":1,"open_ad_ms":9832,"open_ad_skip_ms":0},"ts":1751303984000}
+
+UV明细需求测试数据:
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":11863,"item":"34,27,14","item_type":"sku_ids","last_page_id":"cart","page_id":"trade"},"ts":1651303991000}
+
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":11863,"item":"34,27,14","item_type":"sku_ids","page_id":"trade"},"ts":1651303991000}
+
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":11863,"item":"34,27,14","item_type":"sku_ids","page_id":"trade"},"ts":1651303991000}
+
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190280","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":11863,"item":"34,27,14","item_type":"sku_ids","page_id":"trade"},"ts":1651303991000}
+
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":11863,"item":"34,27,14","item_type":"sku_ids","page_id":"trade"},"ts":1751303991000}
+
+
+
+跳出明细需求:
+	跳出说明:一次会话中只访问过一个页面
+	没有会话ID:连续的两条数据如果间隔时间很短(10s),那么认为是同一次会话的访问记录
+	思路一:会话窗口
+		统计窗口中的数据条数,如果为1,则输出,反之丢弃
+		将窗口中的所有数据按照时间排序,挨个对比
+
+	每一个last_page为null，就是一个新的会话
+	再看之后有没有数据了,没有就是跳出(定时器)
+	思路二:状态编程
+		遇到last_page为null,取出状态数据
+			状态=null    定时器+将自身写入状态
+			状态！=null  输出状态+将自身写入状态
+
+	思路三:CEP(状态编程+within开窗)
+测试数据:
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":11863,"item":"34,27,14","item_type":"sku_ids","last_page_id":"cart","page_id":"trade"},"ts":1651303991000}
+
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":11863,"item":"34,27,14","item_type":"sku_ids","page_id":"trade"},"ts":1651303991000}
+
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":11863,"item":"34,27,14","item_type":"sku_ids","page_id":"trade"},"ts":1651304100000}
+
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190280","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":11863,"item":"34,27,14","item_type":"sku_ids","page_id":"trade"},"ts":1651304115000}
+
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190280","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":11863,"item":"34,27,14","item_type":"sku_ids","page_id":"trade"},"ts":1651304117000}
+
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190280","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":11863,"item":"34,27,14","item_type":"sku_ids","page_id":"trade"},"ts":1651304118000}
+
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190280","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":11863,"item":"34,27,14","item_type":"sku_ids","page_id":"trade"},"ts":1651304120000}
+
+WaterMark可以结合开窗处理乱序数据,表示小于WaterMark数据已经到齐！
+
+WaterMark说明:
+	1.本质:流当中传输的一条特殊的数据,一个时间戳
+	2.作用:处理乱序数据
+	3.作用机制:通过延迟关窗
+	4.传递:
+		(1) 广播方式传输,与Key无关
+		(2) 当前任务中WaterMark取决于上游最小的WaterMark值
+		(3) Watermark是单调递增的,只有Watermark比上次的大,才会向下游传输
+
+
+构建LookUp表
+create TEMPORARY table base_dic(
+    `dic_code` String,
+    `dic_name` String,
+    `parent_code` String,
+    `create_time` String,
+    `operate_time` String
+) WITH (
+  'connector' = 'jdbc',
+  'url' = 'jdbc:mysql://hadoop102:3306/gmall-211126-flink',
+  'table-name' = 'base_dic',
+  'username' = 'root',
+  'password' = '000000'
+)
+
+select
+    t1.id,
+    t1.vc,
+    dic.dic_name
+from t1
+join base_dic FOR SYSTEM_TIME AS OF t1.pt as dic
+on t1.id=dic.dic_code
+
+
+{
+    "database":"gmall-211126-flink",
+    "table":"base_trademark",
+    "type":"update",
+    "ts":1652499176,
+    "xid":188,
+    "commit":true,
+    "data":{
+        "id":13,
+        "tm_name":"atguigu",
+        "logo_url":"/bbb/bbb"
+    },
+    "old":{
+        "logo_url":"/aaa/aaa"
+    }
+}
+
+CREATE TABLE topic_db (
+  `database` STRING,
+  `table` STRING,
+  `type` STRING,
+  `data` MAP<STRING,STRING>,
+  `old` MAP<STRING,STRING>,
+  `pt` AS PROCTIME()
+) WITH (
+  'connector' = 'kafka',
+  'topic' = 'topic_db',
+  'properties.bootstrap.servers' = 'hadoop102:9092',
+  'properties.group.id' = 'aaaaaaa',
+  'scan.startup.mode' = 'earliest-offset',
+  'format' = 'json'
+)
+
+select
+    `data`['id'] id,
+    `data`['user_id'] user_id,
+    `data`['sku_id'] sku_id,
+    `data`['cart_price'] cart_price,
+    if(`type`='insert',`data`['sku_num'],cast(cast(`data`['sku_num'] as int) - cast(`old`['sku_num'] as int) as string)) sku_num,
+    `data`['sku_name'] sku_name,
+    `data`['is_checked'] is_checked,
+    `data`['create_time'] create_time,
+    `data`['operate_time'] operate_time,
+    `data`['is_ordered'] is_ordered,
+    `data`['order_time'] order_time,
+    `data`['source_type'] source_type,
+    `data`['source_id'] source_id,
+    pt
+from topic_db
+where `database` = 'gmall-211126-flink'
+and `table` = 'cart_info'
+and `type` = 'insert'
+or (`type` = 'update' 
+    and 
+    `old`['sku_num'] is not null 
+    and 
+    cast(`data`['sku_num'] as int) > cast(`old`['sku_num'] as int))
+
+base_dic
+dic_code 
+dic_name
+
+select
+    ci.id,
+    ci.user_id,
+    ci.sku_id,
+    ci.cart_price,
+    ci.sku_num,
+    ci.sku_name,
+    ci.is_checked,
+    ci.create_time,
+    ci.operate_time,
+    ci.is_ordered,
+    ci.order_time,
+    ci.source_type source_type_id,
+    dic.dic_name source_type_name,
+    ci.source_id
+from cart_info_table ci
+join base_dic FOR SYSTEM_TIME AS OF ci.pt as dic
+on ci.source_type = dic.dic_code
+
+create table dwd_cart_add(
+    `id` STRING,
+    `user_id` STRING,
+    `sku_id` STRING,
+    `cart_price` STRING,
+    `sku_num` STRING,
+    `sku_name` STRING,
+    `is_checked` STRING,
+    `create_time` STRING,
+    `operate_time` STRING,
+    `is_ordered` STRING,
+    `order_time` STRING,
+    `source_type_id` STRING,
+    `source_type_name` STRING,
+    `source_id` STRING
+)
+
+****************************订单预处理表****************************
+订单明细表:
+select
+    data['id'] id,
+    data['order_id'] order_id,
+    data['sku_id'] sku_id,
+    data['sku_name'] sku_name,
+    data['order_price'] order_price,
+    data['sku_num'] sku_num,
+    data['create_time'] create_time,
+    data['source_type'] source_type,
+    data['source_id'] source_id,
+    data['split_total_amount'] split_total_amount,
+    data['split_activity_amount'] split_activity_amount,
+    data['split_coupon_amount'] split_coupon_amount,
+    pt 
+from topic_db
+where `database` = 'gmall-211126-flink'
+and `table` = 'order_detail' 
+and `type` = 'insert'
+
+
+select
+    data['id'] id,
+    data['consignee'] consignee,
+    data['consignee_tel'] consignee_tel,
+    data['total_amount'] total_amount,
+    data['order_status'] order_status,
+    data['user_id'] user_id,
+    data['payment_way'] payment_way,
+    data['delivery_address'] delivery_address,
+    data['order_comment'] order_comment,
+    data['out_trade_no'] out_trade_no,
+    data['trade_body'] trade_body,
+    data['create_time'] create_time,
+    data['operate_time'] operate_time,
+    data['expire_time'] expire_time,
+    data['process_status'] process_status,
+    data['tracking_no'] tracking_no,
+    data['parent_order_id'] parent_order_id,
+    data['province_id'] province_id,
+    data['activity_reduce_amount'] activity_reduce_amount,
+    data['coupon_reduce_amount'] coupon_reduce_amount,
+    data['original_total_amount'] original_total_amount,
+    data['feight_fee'] feight_fee,
+    data['feight_fee_reduce'] feight_fee_reduce,
+    data['refundable_time'] refundable_time,
+    `type`,
+    `old`
+from topic_db
+where `database` = 'gmall-211126-flink'
+and `table` = 'order_info' 
+and (`type` = 'insert' or `type` = 'update')
+
+select
+    data['id'] id,
+    data['order_id'] order_id,
+    data['order_detail_id'] order_detail_id,
+    data['activity_id'] activity_id,
+    data['activity_rule_id'] activity_rule_id,
+    data['sku_id'] sku_id,
+    data['create_time'] create_time
+from topic_db
+where `database` = 'gmall-211126-flink'
+and `table` = 'order_detail_activity' 
+and `type` = 'insert'
+
+select
+    data['id'],
+    data['order_id'],
+    data['order_detail_id'],
+    data['coupon_id'],
+    data['coupon_use_id'],
+    data['sku_id'],
+    data['create_time']
+from topic_db
+where `database` = 'gmall-211126-flink'
+and `table` = 'order_detail_coupon' 
+and `type` = 'insert'
+
+
+select
+    od.id,
+    od.order_id,
+    od.sku_id,
+    od.sku_name,
+    od.order_price,
+    od.sku_num,
+    od.create_time,
+    od.source_type source_type_id,
+    dic.dic_name source_type_name,
+    od.source_id,
+    od.split_total_amount,
+    od.split_activity_amount,
+    od.split_coupon_amount,
+    oi.consignee,
+    oi.consignee_tel,
+    oi.total_amount,
+    oi.order_status,
+    oi.user_id,
+    oi.payment_way,
+    oi.delivery_address,
+    oi.order_comment,
+    oi.out_trade_no,
+    oi.trade_body,
+    oi.operate_time,
+    oi.expire_time,
+    oi.process_status,
+    oi.tracking_no,
+    oi.parent_order_id,
+    oi.province_id,
+    oi.activity_reduce_amount,
+    oi.coupon_reduce_amount,
+    oi.original_total_amount,
+    oi.feight_fee,
+    oi.feight_fee_reduce,
+    oi.refundable_time,
+    oa.id order_detail_activity_id,
+    oa.activity_id,
+    oa.activity_rule_id,
+    oc.id order_detail_coupon_id,
+    oc.coupon_id,
+    oc.coupon_use_id,
+    oi.`type`,
+    oi.`old`
+from order_detail_table od
+join order_info_table oi
+on od.order_id = oi.id
+left join order_activity_table oa
+on od.id = oa.order_detail_id
+left join order_coupon_table oc
+on od.id = oc.order_detail_id
+join base_dic FOR SYSTEM_TIME AS OF od.pt as dic
+on od.source_type = dic.dic_code
+
+create table dwd_order_pre(
+    `id` string,
+    `order_id` string,
+    `sku_id` string,
+    `sku_name` string,
+    `order_price` string,
+    `sku_num` string,
+    `create_time` string,
+    `source_type_id` string,
+    `source_type_name` string,
+    `source_id` string,
+    `split_total_amount` string,
+    `split_activity_amount` string,
+    `split_coupon_amount` string,
+    `consignee` string,
+    `consignee_tel` string,
+    `total_amount` string,
+    `order_status` string,
+    `user_id` string,
+    `payment_way` string,
+    `delivery_address` string,
+    `order_comment` string,
+    `out_trade_no` string,
+    `trade_body` string,
+    `operate_time` string,
+    `expire_time` string,
+    `process_status` string,
+    `tracking_no` string,
+    `parent_order_id` string,
+    `province_id` string,
+    `activity_reduce_amount` string,
+    `coupon_reduce_amount` string,
+    `original_total_amount` string,
+    `feight_fee` string,
+    `feight_fee_reduce` string,
+    `refundable_time` string,
+    `order_detail_activity_id` string,
+    `activity_id` string,
+    `activity_rule_id` string,
+    `order_detail_coupon_id` string,
+    `coupon_id` string,
+    `coupon_use_id` string,
+    `type` string,
+    `old` map<string,string>
+) 
+
+
+*******************************DWS层*******************************
+create table page_log(
+    `page` map<string,string>,
+    `ts` bigint,
+    `rt` TO_TIMESTAMP(FROM_UNIXTIME(ts/1000)),
+    WATERMARK FOR rt AS rt - INTERVAL '2' SECOND
+)
+
+"item":"小米","item_type":"keyword","last_page_id":"search"
+
+select
+    page['item'] item,
+    rt
+from page_log
+where page['last_page_id'] = 'search'
+and page['item_type'] = 'keyword'
+and page['item'] is not null   filter_table
+
+
+SELECT
+    word,
+    rt
+FROM filter_table, 
+LATERAL TABLE(SplitFunction(item))
+
+
+select
+    DATE_FORMAT(TUMBLE_START(rt, INTERVAL '10' SECOND),'yyyy-MM-dd HH:mm:ss') stt,
+    DATE_FORMAT(TUMBLE_END(rt, INTERVAL '10' SECOND),'yyyy-MM-dd HH:mm:ss') edt,
+    'search' source,
+    word,
+    count(*) ct,
+    UNIX_TIMESTAMP()*1000 ts
+from split_table
+group by word,TUMBLE(rt, INTERVAL '10' SECOND)
+
+0-10 苹果 8
+0-10 手机 5
+
+0-10 苹果 8
+0-10 手机 5
+
+反射说明:aaa属性
+	正常调用:Object value = obj.getAaa()
+	反射调用:Object value = aaa.get(obj)
+
+反射说明:ccc(int a,String b)
+    正常调用:Object value = obj.ccc(a,b)
+    反射调用:Object value = ccc.invoke(obj,a,b)
+
+表:     a,b1,c
+Bean:   a,c,b2
+insert into t(a,c,b1) values(?,?,?)
+解释:按照JavaBean的字段顺序写表的字段名称
+
+
+表:     a,b,c
+Bean:   a,b,c
+insert into t values(?,?,?)
+
+
+vc、ch、ar、is_new  1、1、5623、0、0
+vc、ch、ar、is_new  0、0、0、1、0
+vc、ch、ar、is_new  0、0、0、0、1
+
+vc、ch、ar、is_new  1、1、5623、1、1
+
+开窗操作:
+	OpWindow:windowAll()
+	KeyedWindow:window
+		时间:滚动、滑动、会话
+		计数:滚动、滑动
+
+	窗口聚合函数:
+		增量聚合函数:来一条计算一条
+			效率高、存储的数据量小
+		全量聚合函数:攒到一个集合中,最后统一计算
+			可以求前百分比、可以获取窗口信息
+
+order_id:1001
+order_detail_id:1001-a
+order_detail_activity:a1
+
+order_id:1003
+order_detail_id:1003-a
+
+order_id:1005
+order_detail_id:1005-a
+order_detail_activity:a2
+
+order_detail join order left join activity
+1001 1001-a 456456456   23.5   activity:null,null  
+null
+1001 1001-a 456456456   23.5   activity:a1,12.5
+
+1003 1003-a null  456456456
+
+1005 1005-a null  456456456
+null
+1005 1005-a a2    456456456
+
+针对于left join出现的重复数据问题:
+	方案一:定义一个状态,将数据存入状态,然后来一条和这个比较,留晚的那条放到状态;状态为null的时候,注册定时器,当定时器触发,则输出状态中的数据
+	方案二:开一个窗口,使用全量聚合函数,取出时间最大的一条数据进行输出
+	                使用增量聚合函数,保留时间最大的一条数据,进行输出
+	方案三:如果后续需求没有用到left join右表的字段,那么则可以只保留第一条数据进行输出
+
+2022-04-13 20:42:28.529
+2022-04-13 20:42:28.95
+2022-04-13 20:42:28.095
+
+95:   95000    950
+095:  095000   095
+
+
+2022-04-13 20:42:28    529
+ts+529
+2022-04-13 20:42:28    95
+ts+95
+2022-04-13 20:42:28    095
+ts+95
+
+按照order_id进行KeyBy
+状态中存什么？  
+	然后 MapState 的 Key 存 order_id  X
+	然后 valuestate就可以了存order_id
+	然后 liststate就可以了存(user、tm、spu、category)
+			null     ct=1
+			!null    ct=0 ct=1
+
+先转换为JavaBean -> 关联维表 -> 分组、开窗、聚合(根据order_id去重)
+
+set<String> orderIds;
+
+
+Redis存储数据:String、List、Set、Hash、ZSet、Bitmap
+	1.存什么数据
+		dimInfoJsonStr
+
+	2.使用什么数据类型
+		Hash
+		List
+		String
+
+	3.RedisKey的设计
+		Hash:TableName id
+		List:TableName+id
+		String:TableName+id
+
+Sugar开发流程-GMV需求为例:
+1.选择图形  数字翻牌器
+
+2.JSON格式
+{
+  "status": 0,
+  "msg": "",
+  "data": 1201088.1754108705
+}
+
+3.SQL
+	select sum(order_origin_total_amount) total_amount from dws_trade_order_window where toYYYYMMDD(stt)=20220525
+
+4.数据接口
+	Client
+
+	Controller:接受外部请求、响应外部请求
+	Service:加工数据
+	DAO(Mapper):获取数据
+
+	持久化层
+
+5.对接Sugar
+
+
+{
+  "status": 0,
+  "msg": "",
+  "data": {
+    "categories": [
+      "苹果",
+      "三星"
+    ],
+    "series": [
+      {
+        "name": "手机品牌",
+        "data": [
+          6585,
+          5083
+        ]
+      }
+    ]
+  }
+}
+
+实时数仓
+    分层:
+        ODS:Kafka  topic_db  topic_log
+            采集模块:
+                第一层Flume:日志数据
+                Maxwell:业务数据
+
+        DIM:HBase(Phoenix)
+            使用场景:事实表会根据主键获取一行维表数据(1.永久存储、2.根据主键查询)
+                HBase:海量数据永久存储,根据主键快速查询          √
+                Redis:用户表数据量大,内存数据库                 ×
+                ClickHouse:并发不行,列存                       ×
+                ES:默认给所有字段创建索引                       ×
+                Hive(HDFS):效率低下                            ×
+                Mysql本身:压力太大,实在要用就使用从库            √
+            动态配置:决定需要哪些维表
+                FlinkCDC读取MySQL配置表并转换为广播流
+                处理主流与广播流关联以后的数据流
+                    处理广播流
+                        获取并解析数据、建表、写入状态
+                    处理主流
+                        读取状态、过滤字段、加入SinkTable字段写出
+                自定义Sink将数据写出到Phoenix
+
+        DWD:Kafka  
+            日志数据:DataStream
+                未经加工的 5   状态编程新老用户检验、侧输出流分流
+                日活          状态编程,按天去重数据,TTL
+                跳出          CEP
+            业务数据:FlinkSQL
+                事实表  订单  支付  加购  点赞  评论  收藏  领券  注册
+                JOIN:
+                    WindowJoin、IntervalJoin
+                    join、left join、right join、full join
+                    LookUp join:维度退化
+                    upsert-kafka sink
+
+        DWS:ClickHouse
+            关键词需求:FlinkSQL、提取事件时间开窗、自定义UDTF函数、IK分词器的使用
+            用户商品粒度下单:关联维表操作
+                JDBCUtil -> DimUtil -> 测试发现延迟过高
+                优化1:旁路缓存
+                    缓存的选择:堆缓存、独立缓存服务
+                    读缓存、写缓存、数据更新时删除缓存
+                    数据更新时:将更新的数据写入Phoenix、删除Redis中的数据
+                        先将更新的数据写入Phoenix、再删除Redis中的数据
+                        先删除Redis中的数据、再将更新的数据写入Phoenix
+                        先删除Redis中的数据、再将更新的数据写入Phoenix、再删除Redis中的数据
+                    数据更新时:先将数据写入Redis、再将数据写入Phoenix
+                优化2:异步IO
+            10s聚合
+
+        ADS:数据接口

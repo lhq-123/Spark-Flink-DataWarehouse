@@ -1,0 +1,126 @@
+FlinkCDC读取数据:
+{
+    "before":null,
+    "after":{
+        "source_table":"base_trademark",
+        "sink_table":"dim_base_trademark",
+        "sink_columns":"id,tm_name",
+        "sink_pk":"id",
+        "sink_extend":null
+    },
+    "source":{
+        "version":"1.5.4.Final",
+        "connector":"mysql",
+        "name":"mysql_binlog_source",
+        "ts_ms":1655172926148,
+        "snapshot":"false",
+        "db":"gmall-211227-config",
+        "sequence":null,
+        "table":"table_process",
+        "server_id":0,
+        "gtid":null,
+        "file":"",
+        "pos":0,
+        "row":0,
+        "thread":null,
+        "query":null
+    },
+    "op":"r",
+    "ts_ms":1655172926150,
+    "transaction":null
+}
+
+Maxwell数据格式:
+{
+    "database":"gmall",
+    "table":"cart_info",
+    "type":"update",
+    "ts":1592270938,
+    "xid":13090,
+    "xoffset":1573,
+    "data":{
+        "id":100924,
+        "user_id":"93",
+        "sku_id":16,
+        "cart_price":4488,
+        "sku_num":1,
+        "img_url":"http://47.93.148.192:8080/group1/M00/00/02/rBHu8l-sklaALrngAAHGDqdpFtU741.jpg",
+        "sku_name":"华为 HUAWEI P40 麒麟990 5G SoC芯片 5000万超感知徕卡三摄 30倍数字变焦 8GB+128GB亮黑色全网通5G手机",
+        "is_checked":null,
+        "create_time":"2020-06-14 09:28:57",
+        "operate_time":null,
+        "is_ordered":1,
+        "order_time":"2021-10-17 09:28:58",
+        "source_type":"2401",
+        "source_id":null
+    },
+    "old":{
+        "is_ordered":0,
+        "order_time":null
+    }
+}
+
+日志数据:
+{"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone X","mid":"mid_3442864","os":"iOS 12.4.1","uid":"928","vc":"v2.1.134"},"start":{"entry":"icon","loading_time":1361,"open_ad_id":17,"open_ad_ms":2968,"open_ad_skip_ms":0},"ts":1651303983000}
+{
+	"common":{
+			"ar":"440000",
+			"ba":"iPhone",
+			"ch":"Appstore",
+			"is_new":"0",
+			"md":"iPhone X",
+			"mid":"mid_3442864",
+			"os":"iOS 12.4.1",
+			"uid":"928",
+			"vc":"v2.1.134"
+		},
+	"start":{
+		"entry":"icon",
+		"loading_time":1361,
+		"open_ad_id":17,
+		"open_ad_ms":2968,
+		"open_ad_skip_ms":0
+	},
+	"ts":1651303983000
+}
+{"common":{"ar":"110000","ba":"Xiaomi","ch":"xiaomi","is_new":"1","md":"Xiaomi Mix2 ","mid":"mid_1818969","os":"Android 11.0","uid":"513","vc":"v2.1.134"},"err":{"error_code":2633,"msg":" Exception in thread \\  java.net.SocketTimeoutException\\n \\tat com.atgugu.gmall2020.mock.bean.log.AppError.main(AppError.java:xxxxxx)"},"start":{"entry":"notice","loading_time":12438,"open_ad_id":7,"open_ad_ms":4407,"open_ad_skip_ms":0},"ts":1651217959000}
+{"actions":[{"action_id":"favor_add","item":"5","item_type":"sku_id","ts":1651217964522}],"common":{"ar":"500000","ba":"iPhone","ch":"Appstore","is_new":"1","md":"iPhone Xs Max","mid":"mid_7030190","os":"iOS 13.3.1","uid":"981","vc":"v2.0.1"},"displays":[{"display_type":"query","item":"15","item_type":"sku_id","order":1,"pos_id":1},{"display_type":"query","item":"26","item_type":"sku_id","order":2,"pos_id":3},{"display_type":"query","item":"31","item_type":"sku_id","order":3,"pos_id":2},{"display_type":"promotion","item":"29","item_type":"sku_id","order":4,"pos_id":5},{"display_type":"query","item":"9","item_type":"sku_id","order":5,"pos_id":2},{"display_type":"recommend","item":"1","item_type":"sku_id","order":6,"pos_id":1}],"err":{"error_code":1559,"msg":" Exception in thread \\  java.net.SocketTimeoutException\\n \\tat com.atgugu.gmall2020.mock.bean.log.AppError.main(AppError.java:xxxxxx)"},"page":{"during_time":7045,"item":"5","item_type":"sku_id","last_page_id":"good_list","page_id":"good_detail","source_type":"activity"},"ts":1651217961000}
+{"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone X","mid":"mid_3442864","os":"iOS 12.4.1","uid":"928","vc":"v2.1.134"},"displays":[{"display_type":"activity","item":"1","item_type":"activity_id","order":1,"pos_id":5},{"display_type":"promotion","item":"2","item_type":"sku_id","order":2,"pos_id":3},{"display_type":"query","item":"23","item_type":"sku_id","order":3,"pos_id":5},{"display_type":"query","item":"9","item_type":"sku_id","order":4,"pos_id":5},{"display_type":"query","item":"28","item_type":"sku_id","order":5,"pos_id":5},{"display_type":"query","item":"14","item_type":"sku_id","order":6,"pos_id":3}],"page":{"during_time":4970,"page_id":"home"},"ts":1651303983000}
+{"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone X","mid":"mid_3442864","os":"iOS 12.4.1","uid":"928","vc":"v2.1.134"},"displays":[{"display_type":"promotion","item":"8","item_type":"sku_id","order":1,"pos_id":5},{"display_type":"promotion","item":"35","item_type":"sku_id","order":2,"pos_id":5},{"display_type":"recommend","item":"17","item_type":"sku_id","order":3,"pos_id":3},{"display_type":"promotion","item":"15","item_type":"sku_id","order":4,"pos_id":1},{"display_type":"query","item":"32","item_type":"sku_id","order":5,"pos_id":4},{"display_type":"recommend","item":"3","item_type":"sku_id","order":6,"pos_id":1},{"display_type":"query","item":"33","item_type":"sku_id","order":7,"pos_id":2},{"display_type":"query","item":"25","item_type":"sku_id","order":8,"pos_id":3},{"display_type":"promotion","item":"4","item_type":"sku_id","order":9,"pos_id":5}],"page":{"during_time":7626,"item":"小米盒子","item_type":"keyword","last_page_id":"home","page_id":"good_list"},"ts":1651303984000}
+{"actions":[{"action_id":"favor_add","item":"33","item_type":"sku_id","ts":1651303989298},{"action_id":"cart_add","item":"33","item_type":"sku_id","ts":1651303993596},{"action_id":"get_coupon","item":"3","item_type":"coupon_id","ts":1651303997894}],"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone X","mid":"mid_3442864","os":"iOS 12.4.1","uid":"928","vc":"v2.1.134"},"displays":[{"display_type":"promotion","item":"19","item_type":"sku_id","order":1,"pos_id":3},{"display_type":"query","item":"27","item_type":"sku_id","order":2,"pos_id":4},{"display_type":"query","item":"27","item_type":"sku_id","order":3,"pos_id":5},{"display_type":"promotion","item":"5","item_type":"sku_id","order":4,"pos_id":4}],"page":{"during_time":17195,"item":"33","item_type":"sku_id","last_page_id":"good_list","page_id":"good_detail","source_type":"promotion"},"ts":1651303985000}
+{"actions":[{"action_id":"cart_remove","item":"30","item_type":"sku_id","ts":1651303990453}],"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone X","mid":"mid_3442864","os":"iOS 12.4.1","uid":"928","vc":"v2.1.134"},"page":{"during_time":8907,"last_page_id":"good_detail","page_id":"cart"},"ts":1651303986000}
+{"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone X","mid":"mid_3442864","os":"iOS 12.4.1","uid":"928","vc":"v2.1.134"},"page":{"during_time":1957,"item":"19,3,20","item_type":"sku_ids","last_page_id":"cart","page_id":"trade"},"ts":1651303987000}
+{"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone X","mid":"mid_3442864","os":"iOS 12.4.1","uid":"928","vc":"v2.1.134"},"page":{"during_time":11912,"item":"34,4","item_type":"sku_ids","last_page_id":"trade","page_id":"payment"},"ts":1651303988000}
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"start":{"entry":"icon","loading_time":11717,"open_ad_id":4,"open_ad_ms":4719,"open_ad_skip_ms":0},"ts":1651303983000}
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"displays":[{"display_type":"activity","item":"1","item_type":"activity_id","order":1,"pos_id":1},{"display_type":"activity","item":"2","item_type":"activity_id","order":2,"pos_id":1},{"display_type":"query","item":"24","item_type":"sku_id","order":3,"pos_id":1},{"display_type":"promotion","item":"21","item_type":"sku_id","order":4,"pos_id":5},{"display_type":"query","item":"11","item_type":"sku_id","order":5,"pos_id":5},{"display_type":"recommend","item":"28","item_type":"sku_id","order":6,"pos_id":4},{"display_type":"query","item":"23","item_type":"sku_id","order":7,"pos_id":3},{"display_type":"query","item":"34","item_type":"sku_id","order":8,"pos_id":5},{"display_type":"query","item":"22","item_type":"sku_id","order":9,"pos_id":4},{"display_type":"promotion","item":"5","item_type":"sku_id","order":10,"pos_id":4}],"page":{"during_time":14351,"page_id":"home"},"ts":1651303983000}
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":10266,"last_page_id":"home","page_id":"search"},"ts":1651303984000}
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"displays":[{"display_type":"query","item":"35","item_type":"sku_id","order":1,"pos_id":2},{"display_type":"query","item":"16","item_type":"sku_id","order":2,"pos_id":3},{"display_type":"query","item":"34","item_type":"sku_id","order":3,"pos_id":1},{"display_type":"query","item":"6","item_type":"sku_id","order":4,"pos_id":2},{"display_type":"query","item":"5","item_type":"sku_id","order":5,"pos_id":2},{"display_type":"query","item":"35","item_type":"sku_id","order":6,"pos_id":1},{"display_type":"promotion","item":"32","item_type":"sku_id","order":7,"pos_id":5}],"page":{"during_time":9012,"item":"小米","item_type":"keyword","last_page_id":"search","page_id":"good_list"},"ts":1651303985000}
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"displays":[{"display_type":"promotion","item":"19","item_type":"sku_id","order":1,"pos_id":3},{"display_type":"recommend","item":"14","item_type":"sku_id","order":2,"pos_id":5},{"display_type":"promotion","item":"16","item_type":"sku_id","order":3,"pos_id":4},{"display_type":"query","item":"34","item_type":"sku_id","order":4,"pos_id":3},{"display_type":"recommend","item":"10","item_type":"sku_id","order":5,"pos_id":2},{"display_type":"promotion","item":"31","item_type":"sku_id","order":6,"pos_id":4}],"page":{"during_time":12336,"item":"26","item_type":"sku_id","last_page_id":"good_list","page_id":"good_detail","source_type":"recommend"},"ts":1651303986000}
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":8465,"last_page_id":"good_detail","page_id":"login"},"ts":1651303987000}
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":4460,"last_page_id":"login","page_id":"register"},"ts":1651303988000}
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"displays":[{"display_type":"recommend","item":"28","item_type":"sku_id","order":1,"pos_id":2},{"display_type":"query","item":"26","item_type":"sku_id","order":2,"pos_id":1},{"display_type":"query","item":"12","item_type":"sku_id","order":3,"pos_id":4},{"display_type":"query","item":"35","item_type":"sku_id","order":4,"pos_id":2},{"display_type":"recommend","item":"31","item_type":"sku_id","order":5,"pos_id":1},{"display_type":"query","item":"20","item_type":"sku_id","order":6,"pos_id":5},{"display_type":"query","item":"19","item_type":"sku_id","order":7,"pos_id":2},{"display_type":"promotion","item":"23","item_type":"sku_id","order":8,"pos_id":5},{"display_type":"query","item":"3","item_type":"sku_id","order":9,"pos_id":5},{"display_type":"query","item":"35","item_type":"sku_id","order":10,"pos_id":1}],"page":{"during_time":9236,"item":"33","item_type":"sku_id","last_page_id":"register","page_id":"good_detail","source_type":"query"},"ts":1651303989000}
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":8224,"last_page_id":"good_detail","page_id":"cart"},"ts":1651303990000}
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":11863,"item":"34,27,14","item_type":"sku_ids","last_page_id":"cart","page_id":"trade"},"ts":1651303991000}
+{"common":{"ar":"370000","ba":"Xiaomi","ch":"web","is_new":"0","md":"Xiaomi 10 Pro ","mid":"mid_2190279","os":"Android 11.0","uid":"688","vc":"v2.1.134"},"page":{"during_time":19061,"item":"35,26","item_type":"sku_ids","last_page_id":"trade","page_id":"payment"},"ts":1651303992000}
+{"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"1","md":"iPhone Xs Max","mid":"mid_51315","os":"iOS 13.2.3","uid":"603","vc":"v2.1.132"},"start":{"entry":"notice","loading_time":1087,"open_ad_id":1,"open_ad_ms":9832,"open_ad_skip_ms":0},"ts":1651303983000}
+{"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"1","md":"iPhone Xs Max","mid":"mid_51315","os":"iOS 13.2.3","uid":"603","vc":"v2.1.132"},"displays":[{"display_type":"activity","item":"2","item_type":"activity_id","order":1,"pos_id":5},{"display_type":"recommend","item":"35","item_type":"sku_id","order":2,"pos_id":5},{"display_type":"query","item":"23","item_type":"sku_id","order":3,"pos_id":5},{"display_type":"promotion","item":"18","item_type":"sku_id","order":4,"pos_id":4},{"display_type":"recommend","item":"9","item_type":"sku_id","order":5,"pos_id":5},{"display_type":"promotion","item":"22","item_type":"sku_id","order":6,"pos_id":2},{"display_type":"query","item":"19","item_type":"sku_id","order":7,"pos_id":4},{"display_type":"promotion","item":"18","item_type":"sku_id","order":8,"pos_id":1},{"display_type":"query","item":"28","item_type":"sku_id","order":9,"pos_id":5},{"display_type":"query","item":"31","item_type":"sku_id","order":10,"pos_id":3}],"page":{"during_time":2952,"page_id":"home"},"ts":1651303983000}
+{"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"1","md":"iPhone Xs Max","mid":"mid_51315","os":"iOS 13.2.3","uid":"603","vc":"v2.1.132"},"page":{"during_time":17033,"last_page_id":"home","page_id":"search"},"ts":1651303984000}
+{"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"1","md":"iPhone Xs Max","mid":"mid_51315","os":"iOS 13.2.3","uid":"603","vc":"v2.1.132"},"displays":[{"display_type":"promotion","item":"33","item_type":"sku_id","order":1,"pos_id":3},{"display_type":"promotion","item":"20","item_type":"sku_id","order":2,"pos_id":1},{"display_type":"query","item":"14","item_type":"sku_id","order":3,"pos_id":1},{"display_type":"query","item":"29","item_type":"sku_id","order":4,"pos_id":2},{"display_type":"query","item":"34","item_type":"sku_id","order":5,"pos_id":2},{"display_type":"query","item":"1","item_type":"sku_id","order":6,"pos_id":1}],"page":{"during_time":11092,"item":"苹果手机","item_type":"keyword","last_page_id":"search","page_id":"good_list"},"ts":1651303985000}
+{"actions":[{"action_id":"get_coupon","item":"3","item_type":"coupon_id","ts":1651303990081}],"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"1","md":"iPhone Xs Max","mid":"mid_51315","os":"iOS 13.2.3","uid":"603","vc":"v2.1.132"},"displays":[{"display_type":"query","item":"31","item_type":"sku_id","order":1,"pos_id":2},{"display_type":"query","item":"19","item_type":"sku_id","order":2,"pos_id":1},{"display_type":"query","item":"22","item_type":"sku_id","order":3,"pos_id":3},{"display_type":"query","item":"26","item_type":"sku_id","order":4,"pos_id":4},{"display_type":"query","item":"6","item_type":"sku_id","order":5,"pos_id":3},{"display_type":"query","item":"11","item_type":"sku_id","order":6,"pos_id":2},{"display_type":"query","item":"21","item_type":"sku_id","order":7,"pos_id":1},{"display_type":"query","item":"22","item_type":"sku_id","order":8,"pos_id":4},{"display_type":"query","item":"5","item_type":"sku_id","order":9,"pos_id":3},{"display_type":"query","item":"25","item_type":"sku_id","order":10,"pos_id":1}],"page":{"during_time":8162,"item":"31","item_type":"sku_id","last_page_id":"good_list","page_id":"good_detail","source_type":"promotion"},"ts":1651303986000}
+{"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"1","md":"iPhone Xs Max","mid":"mid_51315","os":"iOS 13.2.3","uid":"603","vc":"v2.1.132"},"page":{"during_time":18138,"last_page_id":"good_detail","page_id":"login"},"ts":1651303987000}
+{"actions":[{"action_id":"cart_add","item":"4","item_type":"sku_id","ts":1651303991527},{"action_id":"get_coupon","item":"1","item_type":"coupon_id","ts":1651303995054}],"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"1","md":"iPhone Xs Max","mid":"mid_51315","os":"iOS 13.2.3","uid":"603","vc":"v2.1.132"},"displays":[{"display_type":"query","item":"28","item_type":"sku_id","order":1,"pos_id":1},{"display_type":"recommend","item":"20","item_type":"sku_id","order":2,"pos_id":2},{"display_type":"query","item":"3","item_type":"sku_id","order":3,"pos_id":2},{"display_type":"query","item":"2","item_type":"sku_id","order":4,"pos_id":3},{"display_type":"query","item":"4","item_type":"sku_id","order":5,"pos_id":4}],"page":{"during_time":10583,"item":"4","item_type":"sku_id","last_page_id":"login","page_id":"good_detail","source_type":"recommend"},"ts":1651303988000}
+{"actions":[{"action_id":"cart_minus_num","item":"32","item_type":"sku_id","ts":1651303991656}],"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"1","md":"iPhone Xs Max","mid":"mid_51315","os":"iOS 13.2.3","uid":"603","vc":"v2.1.132"},"page":{"during_time":5312,"last_page_id":"good_detail","page_id":"cart"},"ts":1651303989000}
+{"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"1","md":"iPhone Xs Max","mid":"mid_51315","os":"iOS 13.2.3","uid":"603","vc":"v2.1.132"},"page":{"during_time":14512,"item":"21","item_type":"sku_ids","last_page_id":"cart","page_id":"trade"},"ts":1651303990000}
+{"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"1","md":"iPhone Xs Max","mid":"mid_51315","os":"iOS 13.2.3","uid":"603","vc":"v2.1.132"},"page":{"during_time":10632,"item":"34,9","item_type":"sku_ids","last_page_id":"trade","page_id":"payment"},"ts":1651303991000}
+{"common":{"ar":"110000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone Xs Max","mid":"mid_5445386","os":"iOS 13.3.1","uid":"271","vc":"v2.1.134"},"start":{"entry":"notice","loading_time":13546,"open_ad_id":3,"open_ad_ms":8113,"open_ad_skip_ms":0},"ts":1651303983000}
+{"common":{"ar":"110000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone Xs Max","mid":"mid_5445386","os":"iOS 13.3.1","uid":"271","vc":"v2.1.134"},"displays":[{"display_type":"activity","item":"2","item_type":"activity_id","order":1,"pos_id":1},{"display_type":"activity","item":"1","item_type":"activity_id","order":2,"pos_id":1},{"display_type":"query","item":"8","item_type":"sku_id","order":3,"pos_id":1},{"display_type":"query","item":"11","item_type":"sku_id","order":4,"pos_id":3},{"display_type":"query","item":"34","item_type":"sku_id","order":5,"pos_id":2},{"display_type":"query","item":"3","item_type":"sku_id","order":6,"pos_id":1},{"display_type":"promotion","item":"22","item_type":"sku_id","order":7,"pos_id":1},{"display_type":"promotion","item":"8","item_type":"sku_id","order":8,"pos_id":5},{"display_type":"query","item":"3","item_type":"sku_id","order":9,"pos_id":5},{"display_type":"promotion","item":"10","item_type":"sku_id","order":10,"pos_id":1},{"display_type":"query","item":"16","item_type":"sku_id","order":11,"pos_id":4},{"display_type":"query","item":"29","item_type":"sku_id","order":12,"pos_id":2}],"page":{"during_time":2933,"page_id":"home"},"ts":1651303983000}
+{"common":{"ar":"110000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone Xs Max","mid":"mid_5445386","os":"iOS 13.3.1","uid":"271","vc":"v2.1.134"},"page":{"during_time":19036,"last_page_id":"home","page_id":"mine"},"ts":1651303984000}
+{"common":{"ar":"110000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone Xs Max","mid":"mid_5445386","os":"iOS 13.3.1","uid":"271","vc":"v2.1.134"},"page":{"during_time":19944,"last_page_id":"mine","page_id":"orders_unpaid"},"ts":1651303985000}
+{"common":{"ar":"110000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone Xs Max","mid":"mid_5445386","os":"iOS 13.3.1","uid":"271","vc":"v2.1.134"},"page":{"during_time":10109,"item":"3,7","item_type":"sku_ids","last_page_id":"orders_unpaid","page_id":"trade"},"ts":1651303986000}
+{"common":{"ar":"110000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone Xs Max","mid":"mid_5445386","os":"iOS 13.3.1","uid":"271","vc":"v2.1.134"},"page":{"during_time":2496,"item":"20,23,26","item_type":"sku_ids","last_page_id":"trade","page_id":"payment"},"ts":1651303987000}
+{"common":{"ar":"110000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone Xs","mid":"mid_7826605","os":"iOS 13.3.1","uid":"884","vc":"v2.1.132"},"start":{"entry":"icon","loading_time":6558,"open_ad_id":5,"open_ad_ms":2562,"open_ad_skip_ms":2071},"ts":1651303983000}
+{"common":{"ar":"110000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone Xs","mid":"mid_7826605","os":"iOS 13.3.1","uid":"884","vc":"v2.1.132"},"displays":[{"display_type":"activity","item":"1","item_type":"activity_id","order":1,"pos_id":2},{"display_type":"promotion","item":"21","item_type":"sku_id","order":2,"pos_id":5},{"display_type":"query","item":"20","item_type":"sku_id","order":3,"pos_id":2},{"display_type":"recommend","item":"10","item_type":"sku_id","order":4,"pos_id":1},{"display_type":"promotion","item":"35","item_type":"sku_id","order":5,"pos_id":2},{"display_type":"promotion","item":"29","item_type":"sku_id","order":6,"pos_id":3},{"display_type":"promotion","item":"30","item_type":"sku_id","order":7,"pos_id":5},{"display_type":"query","item":"8","item_type":"sku_id","order":8,"pos_id":2},{"display_type":"promotion","item":"18","item_type":"sku_id","order":9,"pos_id":4},{"display_type":"promotion","item":"12","item_type":"sku_id","order":10,"pos_id":2}],"page":{"during_time":13109,"page_id":"home"},"ts":1651303983000}
+{"common":{"ar":"110000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone Xs","mid":"mid_7826605","os":"iOS 13.3.1","uid":"884","vc":"v2.1.132"},"page":{"during_time":6071,"last_page_id":"home","page_id":"mine"},"ts":1651303984000}
+{"common":{"ar":"110000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone Xs","mid":"mid_7826605","os":"iOS 13.3.1","uid":"884","vc":"v2.1.132"},"page":{"during_time":4795,"last_page_id":"mine","page_id":"orders_unpaid"},"ts":1651303985000}
+{"common":{"ar":"110000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone Xs","mid":"mid_7826605","os":"iOS 13.3.1","uid":"884","vc":"v2.1.132"},"page":{"during_time":5665,"item":"16,3,23","item_type":"sku_ids","last_page_id":"orders_unpaid","page_id":"trade"},"ts":1651303986000}
+{"common":{"ar":"110000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone Xs","mid":"mid_7826605","os":"iOS 13.3.1","uid":"884","vc":"v2.1.132"},"page":{"during_time":6308,"item":"34,23,7","item_type":"sku_ids","last_page_id":"trade","page_id":"payment"},"ts":1651303987000}
