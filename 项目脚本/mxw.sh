@@ -1,10 +1,13 @@
 #!/bin/bash
+
+
 MAXWELL_HOME=/opt/module/maxwell
 
 status_maxwell(){
-result=`ps -ef | grep com.zendesk.maxwell.Maxwell | grep -v grep| wc -l`
-return $result
+    result=`ps -ef | grep com.zendesk.maxwell.Maxwell | grep -v grep | wc -l`
+    return $result
 }
+
 
 start_maxwell(){
     status_maxwell

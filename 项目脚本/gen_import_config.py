@@ -6,7 +6,7 @@ import sys
 import MySQLdb
 
 #MySQL相关配置，需根据实际情况作出修改
-mysql_host = "Flink01"
+mysql_host = "Flink02"
 mysql_port = "3306"
 mysql_user = "root"
 mysql_passwd = "123456"

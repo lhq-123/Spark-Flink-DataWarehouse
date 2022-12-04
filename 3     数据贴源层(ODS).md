@@ -8,7 +8,5 @@ ODS层的设计要点如下：
 
 （3）ODS层表名的命名规范为：ods表名单分区增量全量标识（inc/full）
 
-
-
 full结尾的tsv格式的数据，inc结尾的是json格式的数据
 

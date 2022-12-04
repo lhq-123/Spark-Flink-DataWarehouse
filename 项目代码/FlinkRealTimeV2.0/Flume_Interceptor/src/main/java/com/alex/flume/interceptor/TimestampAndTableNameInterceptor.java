@@ -49,7 +49,7 @@ public class TimestampAndTableNameInterceptor implements Interceptor {
 
     }
 
-    public static class Builddr implements Interceptor.Builder {
+    public static class Builder implements Interceptor.Builder {
 
         @Override
         public Interceptor build() {
