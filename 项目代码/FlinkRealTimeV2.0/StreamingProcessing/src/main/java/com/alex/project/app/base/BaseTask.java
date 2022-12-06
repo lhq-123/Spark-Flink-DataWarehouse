@@ -2,14 +2,20 @@ package com.alex.project.app.base;
 
 import com.alex.project.utils.ConfigLoader;
 import org.apache.flink.api.common.restartstrategy.RestartStrategies;
+import org.apache.flink.api.common.serialization.SimpleStringEncoder;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.java.utils.ParameterTool;
+import org.apache.flink.core.fs.Path;
 import org.apache.flink.runtime.state.hashmap.HashMapStateBackend;
 import org.apache.flink.runtime.state.storage.FileSystemCheckpointStorage;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.environment.CheckpointConfig;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.sink.filesystem.OutputFileConfig;
+import org.apache.flink.streaming.api.functions.sink.filesystem.StreamingFileSink;
+import org.apache.flink.streaming.api.functions.sink.filesystem.bucketassigners.DateTimeBucketAssigner;
+import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.DefaultRollingPolicy;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 import org.apache.flink.streaming.connectors.kafka.KafkaSerializationSchema;
@@ -20,6 +26,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author liu
@@ -104,11 +111,11 @@ public abstract class BaseTask {
             //FlinkKafkaConsumer.setStartFromTimestamp(1624896000000L)/setStartFromEarliest/setStartFromLatest
             //enable.auto.commit=FALSE，则消费者重启之后会消费到相同的消息\
             //auto.offset.reset=earliest情况下，新的消费者（消费者二）将会从头开始消费Topic下的消息，即从offset=0的位置开始消费
-            props.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,"false");
-            props.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"earliest");
+            //props.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,"false");
+            //props.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"earliest");
         //获取 KafkaSource
         FlinkKafkaConsumer<String> FlinkKafkaConsumer = new FlinkKafkaConsumer<>(topic, new SimpleStringSchema(), props);
-        //FlinkKafkaConsumer.setStartFromEarliest();
+        FlinkKafkaConsumer.setStartFromEarliest();
         return FlinkKafkaConsumer;
 
     }
@@ -157,6 +164,36 @@ public abstract class BaseTask {
                 kafkaSerializationSchema,
                 properties,
                 FlinkKafkaProducer.Semantic.EXACTLY_ONCE);
+    }
+
+    /**
+     * 将数据流以文件形式写入HDFS
+     * @param prefix
+     * @param suffix
+     * @param path
+     * @param bucketAssignerFormat
+     * @return
+     */
+    public static StreamingFileSink<String> HdfsSink(
+            String prefix,
+            String suffix,
+            String path,
+            String bucketAssignerFormat
+    ){
+        OutputFileConfig config = OutputFileConfig.builder().withPartPrefix(prefix).withPartSuffix(suffix).build();
+        StreamingFileSink DataSink = StreamingFileSink.forRowFormat(
+                        new Path(path),
+                        new SimpleStringEncoder<>("UTF-8"))
+                .withBucketAssigner(new DateTimeBucketAssigner<>(bucketAssignerFormat))
+                .withRollingPolicy(DefaultRollingPolicy.builder()
+                        //设置滚动时间间隔，5秒钟产生一个文件
+                        .withRolloverInterval(TimeUnit.SECONDS.toMillis(5))
+                        //设置不活动的时间间隔，未写入数据处于不活动状态时滚动文件
+                        .withInactivityInterval(TimeUnit.SECONDS.toMillis(2))
+                        //文件大小，默认是128M滚动一次
+                        .withMaxPartSize(128 * 1024 * 1024).build())
+                .withOutputFileConfig(config).build();
+        return DataSink;
     }
 
     /**

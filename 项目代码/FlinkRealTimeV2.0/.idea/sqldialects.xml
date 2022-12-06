@@ -2,5 +2,8 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/../../模拟数据/业务数据/gmall.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/OfflineAnalysis/src/main/SourceCode/ods/DDL/business.sql" dialect="HiveQL" />
+    <file url="file://$PROJECT_DIR$/OfflineAnalysis/src/main/SourceCode/ods/DDL/userlog.sql" dialect="SparkSQL" />
+    <file url="file://$PROJECT_DIR$/../../项目脚本/metastore .sql" dialect="MySQL" />
   </component>
 </project>

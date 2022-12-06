@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="Flink01_Phoenix" uuid="c868d05f-53f2-490a-b553-798d6a2644d8">
-      <driver-ref>phoenix.thick</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.apache.phoenix.jdbc.PhoenixDriver</jdbc-driver>
-      <jdbc-url>jdbc:phoenix:Flink01:2181:/hbase</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
     <data-source source="LOCAL" name="Flink02_MySQL" uuid="ea8535bb-97f8-4184-b5fc-0be20520b4c7">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
