@@ -1,3 +1,7 @@
+--如果使用SparkSQL的话是可以使用set在SQL脚本里传参数的，但是在hive on spark里是不支持的
+--SET DB_LOCATION=hdfs://Flink01:8020/spark/gmall;
+CREATE DATABASE IF NOT EXISTS ods location 'hdfs://Flink01:8020/spark/gmall/ods';
+USE ods;
 
 --活动信息表（全量表）
 DROP TABLE IF EXISTS ods_activity_info_full;
@@ -14,7 +18,8 @@ CREATE EXTERNAL TABLE ods_activity_info_full
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
     NULL DEFINED AS ''
-    LOCATION '/warehouse/gmall/ods/ods_activity_info_full/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_activity_info_full/';
+
 --活动规则表（全量表）
 DROP TABLE IF EXISTS ods_activity_rule_full;
 CREATE EXTERNAL TABLE ods_activity_rule_full
@@ -31,7 +36,8 @@ CREATE EXTERNAL TABLE ods_activity_rule_full
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
     NULL DEFINED AS ''
-    LOCATION '/warehouse/gmall/ods/ods_activity_rule_full/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_activity_rule_full/';
+
 --一级品类表（全量表）
 DROP TABLE IF EXISTS ods_base_category1_full;
 CREATE EXTERNAL TABLE ods_base_category1_full
@@ -42,7 +48,8 @@ CREATE EXTERNAL TABLE ods_base_category1_full
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
     NULL DEFINED AS ''
-    LOCATION '/warehouse/gmall/ods/ods_base_category1_full/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_base_category1_full/';
+
 --二级品类表（全量表）
 DROP TABLE IF EXISTS ods_base_category2_full;
 CREATE EXTERNAL TABLE ods_base_category2_full
@@ -54,7 +61,8 @@ CREATE EXTERNAL TABLE ods_base_category2_full
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
     NULL DEFINED AS ''
-    LOCATION '/warehouse/gmall/ods/ods_base_category2_full/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_base_category2_full/';
+
 --三级品类表（全量表）
 DROP TABLE IF EXISTS ods_base_category3_full;
 CREATE EXTERNAL TABLE ods_base_category3_full
@@ -66,7 +74,8 @@ CREATE EXTERNAL TABLE ods_base_category3_full
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
     NULL DEFINED AS ''
-    LOCATION '/warehouse/gmall/ods/ods_base_category3_full/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_base_category3_full/';
+
 --编码字典表（全量表）
 DROP TABLE IF EXISTS ods_base_dic_full;
 CREATE EXTERNAL TABLE ods_base_dic_full
@@ -80,7 +89,8 @@ CREATE EXTERNAL TABLE ods_base_dic_full
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
     NULL DEFINED AS ''
-    LOCATION '/warehouse/gmall/ods/ods_base_dic_full/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_base_dic_full/';
+
 --省份表（全量表）
 DROP TABLE IF EXISTS ods_base_province_full;
 CREATE EXTERNAL TABLE ods_base_province_full
@@ -95,7 +105,8 @@ CREATE EXTERNAL TABLE ods_base_province_full
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
     NULL DEFINED AS ''
-    LOCATION '/warehouse/gmall/ods/ods_base_province_full/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_base_province_full/';
+
 --地区表（全量表）
 DROP TABLE IF EXISTS ods_base_region_full;
 CREATE EXTERNAL TABLE ods_base_region_full
@@ -106,7 +117,8 @@ CREATE EXTERNAL TABLE ods_base_region_full
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
     NULL DEFINED AS ''
-    LOCATION '/warehouse/gmall/ods/ods_base_region_full/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_base_region_full/';
+
 --品牌表（全量表）
 DROP TABLE IF EXISTS ods_base_trademark_full;
 CREATE EXTERNAL TABLE ods_base_trademark_full
@@ -118,7 +130,8 @@ CREATE EXTERNAL TABLE ods_base_trademark_full
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
     NULL DEFINED AS ''
-    LOCATION '/warehouse/gmall/ods/ods_base_trademark_full/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_base_trademark_full/';
+
 --购物车表（全量表）
 DROP TABLE IF EXISTS ods_cart_info_full;
 CREATE EXTERNAL TABLE ods_cart_info_full
@@ -141,7 +154,8 @@ CREATE EXTERNAL TABLE ods_cart_info_full
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
     NULL DEFINED AS ''
-    LOCATION '/warehouse/gmall/ods/ods_cart_info_full/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_cart_info_full/';
+
 --优惠券信息表（全量表）
 DROP TABLE IF EXISTS ods_coupon_info_full;
 CREATE EXTERNAL TABLE ods_coupon_info_full
@@ -166,7 +180,8 @@ CREATE EXTERNAL TABLE ods_coupon_info_full
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
     NULL DEFINED AS ''
-    LOCATION '/warehouse/gmall/ods/ods_coupon_info_full/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_coupon_info_full/';
+
 --商品平台属性表（全量表）
 DROP TABLE IF EXISTS ods_sku_attr_value_full;
 CREATE EXTERNAL TABLE ods_sku_attr_value_full
@@ -181,7 +196,8 @@ CREATE EXTERNAL TABLE ods_sku_attr_value_full
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
     NULL DEFINED AS ''
-    LOCATION '/warehouse/gmall/ods/ods_sku_attr_value_full/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_sku_attr_value_full/';
+
 --商品表（全量表）
 DROP TABLE IF EXISTS ods_sku_info_full;
 CREATE EXTERNAL TABLE ods_sku_info_full
@@ -201,7 +217,8 @@ CREATE EXTERNAL TABLE ods_sku_info_full
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
     NULL DEFINED AS ''
-    LOCATION '/warehouse/gmall/ods/ods_sku_info_full/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_sku_info_full/';
+
 --商品销售属性值表（全量表）
 DROP TABLE IF EXISTS ods_sku_sale_attr_value_full;
 CREATE EXTERNAL TABLE ods_sku_sale_attr_value_full
@@ -217,7 +234,8 @@ CREATE EXTERNAL TABLE ods_sku_sale_attr_value_full
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
     NULL DEFINED AS ''
-    LOCATION '/warehouse/gmall/ods/ods_sku_sale_attr_value_full/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_sku_sale_attr_value_full/';
+
 --SPU表（全量表）
 DROP TABLE IF EXISTS ods_spu_info_full;
 CREATE EXTERNAL TABLE ods_spu_info_full
@@ -231,7 +249,8 @@ CREATE EXTERNAL TABLE ods_spu_info_full
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
     NULL DEFINED AS ''
-    LOCATION '/warehouse/gmall/ods/ods_spu_info_full/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_spu_info_full/';
+
 --购物车表（增量表）
 DROP TABLE IF EXISTS ods_cart_info_inc;
 CREATE EXTERNAL TABLE ods_cart_info_inc
@@ -245,7 +264,8 @@ CREATE EXTERNAL TABLE ods_cart_info_inc
 ) COMMENT '购物车增量表'
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.JsonSerDe'
-    LOCATION '/warehouse/gmall/ods/ods_cart_info_inc/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_cart_info_inc/';
+
 --评论表（增量表）
 DROP TABLE IF EXISTS ods_comment_info_inc;
 CREATE EXTERNAL TABLE ods_comment_info_inc
@@ -258,7 +278,8 @@ CREATE EXTERNAL TABLE ods_comment_info_inc
 ) COMMENT '评价表'
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.JsonSerDe'
-    LOCATION '/warehouse/gmall/ods/ods_comment_info_inc/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_comment_info_inc/';
+
 --优惠券领用表（增量表）
 DROP TABLE IF EXISTS ods_coupon_use_inc;
 CREATE EXTERNAL TABLE ods_coupon_use_inc
@@ -271,7 +292,8 @@ CREATE EXTERNAL TABLE ods_coupon_use_inc
 ) COMMENT '优惠券领用表'
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.JsonSerDe'
-    LOCATION '/warehouse/gmall/ods/ods_coupon_use_inc/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_coupon_use_inc/';
+
 --收藏表（增量表）
 DROP TABLE IF EXISTS ods_favor_info_inc;
 CREATE EXTERNAL TABLE ods_favor_info_inc
@@ -284,7 +306,8 @@ CREATE EXTERNAL TABLE ods_favor_info_inc
 ) COMMENT '收藏表'
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.JsonSerDe'
-    LOCATION '/warehouse/gmall/ods/ods_favor_info_inc/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_favor_info_inc/';
+
 --订单明细表（增量表）
 DROP TABLE IF EXISTS ods_order_detail_inc;
 CREATE EXTERNAL TABLE ods_order_detail_inc
@@ -299,7 +322,8 @@ CREATE EXTERNAL TABLE ods_order_detail_inc
 ) COMMENT '订单明细表'
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.JsonSerDe'
-    LOCATION '/warehouse/gmall/ods/ods_order_detail_inc/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_order_detail_inc/';
+
 --订单明细活动关联表（增量表）
 DROP TABLE IF EXISTS ods_order_detail_activity_inc;
 CREATE EXTERNAL TABLE ods_order_detail_activity_inc
@@ -312,7 +336,8 @@ CREATE EXTERNAL TABLE ods_order_detail_activity_inc
 ) COMMENT '订单明细活动关联表'
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.JsonSerDe'
-    LOCATION '/warehouse/gmall/ods/ods_order_detail_activity_inc/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_order_detail_activity_inc/';
+
 --订单明细优惠券关联表（增量表）
 DROP TABLE IF EXISTS ods_order_detail_coupon_inc;
 CREATE EXTERNAL TABLE ods_order_detail_coupon_inc
@@ -325,7 +350,8 @@ CREATE EXTERNAL TABLE ods_order_detail_coupon_inc
 ) COMMENT '订单明细优惠券关联表'
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.JsonSerDe'
-    LOCATION '/warehouse/gmall/ods/ods_order_detail_coupon_inc/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_order_detail_coupon_inc/';
+
 --订单表（增量表）
 DROP TABLE IF EXISTS ods_order_info_inc;
 CREATE EXTERNAL TABLE ods_order_info_inc
@@ -342,7 +368,8 @@ CREATE EXTERNAL TABLE ods_order_info_inc
 ) COMMENT '订单表'
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.JsonSerDe'
-    LOCATION '/warehouse/gmall/ods/ods_order_info_inc/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_order_info_inc/';
+
 --退单表（增量表）
 DROP TABLE IF EXISTS ods_order_refund_info_inc;
 CREATE EXTERNAL TABLE ods_order_refund_info_inc
@@ -356,7 +383,8 @@ CREATE EXTERNAL TABLE ods_order_refund_info_inc
 ) COMMENT '退单表'
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.JsonSerDe'
-    LOCATION '/warehouse/gmall/ods/ods_order_refund_info_inc/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_order_refund_info_inc/';
+
 --订单状态流水表（增量表）
 DROP TABLE IF EXISTS ods_order_status_log_inc;
 CREATE EXTERNAL TABLE ods_order_status_log_inc
@@ -368,7 +396,8 @@ CREATE EXTERNAL TABLE ods_order_status_log_inc
 ) COMMENT '退单表'
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.JsonSerDe'
-    LOCATION '/warehouse/gmall/ods/ods_order_status_log_inc/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_order_status_log_inc/';
+
 --支付表（增量表）
 DROP TABLE IF EXISTS ods_payment_info_inc;
 CREATE EXTERNAL TABLE ods_payment_info_inc
@@ -382,7 +411,8 @@ CREATE EXTERNAL TABLE ods_payment_info_inc
 ) COMMENT '支付表'
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.JsonSerDe'
-    LOCATION '/warehouse/gmall/ods/ods_payment_info_inc/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_payment_info_inc/';
+
 --退款表（增量表）
 DROP TABLE IF EXISTS ods_refund_payment_inc;
 CREATE EXTERNAL TABLE ods_refund_payment_inc
@@ -396,7 +426,8 @@ CREATE EXTERNAL TABLE ods_refund_payment_inc
 ) COMMENT '退款表'
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.JsonSerDe'
-    LOCATION '/warehouse/gmall/ods/ods_refund_payment_inc/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_refund_payment_inc/';
+
 --用户表（增量表）
 DROP TABLE IF EXISTS ods_user_info_inc;
 CREATE EXTERNAL TABLE ods_user_info_inc
@@ -410,4 +441,4 @@ CREATE EXTERNAL TABLE ods_user_info_inc
 ) COMMENT '用户表'
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.JsonSerDe'
-    LOCATION '/warehouse/gmall/ods/ods_user_info_inc/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_user_info_inc/';

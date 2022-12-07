@@ -1,12 +1,6 @@
---使用SQL形式暂时还没办法直接将Jason数据映射到表里，所以采用python DataFrame的形式
---CREATE TEMPORARY VIEW jsonTable
---USING org.apache.spark.sql.json
---OPTIONS (
---  path "examples/src/main/resources/people.json"
---)
-
-SET DB_LOCATION=hdfs://Flink01:8020/origin_data/gmall;
-CREATE DATABASE IF NOT EXISTS ods location '${DB_LOCATION}/ods';
+--如果使用SparkSQL的话是可以使用set在SQL脚本里传参数的，但是在hive on spark里是不支持的
+--SET DB_LOCATION=hdfs://Flink01:8020/spark/gmall;
+CREATE DATABASE IF NOT EXISTS ods location 'hdfs://Flink01:8020/spark/gmall/ods';
 USE ods;
 --增量日志表
 DROP TABLE IF EXISTS ods_log_inc;
@@ -22,4 +16,4 @@ CREATE EXTERNAL TABLE IF NOT EXISTS ods_log_inc
 ) COMMENT '活动信息表'
     PARTITIONED BY (`dt` STRING)
     ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.JsonSerDe'
-    LOCATION '${DB_LOCATION}/ods/ods_log_inc/';
+    LOCATION 'hdfs://Flink01:8020/spark/gmall/ods/ods_log_inc/';

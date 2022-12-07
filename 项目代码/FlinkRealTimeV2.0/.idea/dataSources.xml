@@ -11,5 +11,13 @@
         <property name="useSSL" value="FALSE" />
       </driver-properties>
     </data-source>
+    <data-source source="LOCAL" name="Flink01_Hive" uuid="c4805eb3-2fdc-467a-936d-82e29d60c223">
+      <driver-ref>hive</driver-ref>
+      <synchronize>true</synchronize>
+      <remarks>Hive 3.1.3</remarks>
+      <jdbc-driver>org.apache.hive.jdbc.HiveDriver</jdbc-driver>
+      <jdbc-url>jdbc:hive2://Flink01:10000</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
