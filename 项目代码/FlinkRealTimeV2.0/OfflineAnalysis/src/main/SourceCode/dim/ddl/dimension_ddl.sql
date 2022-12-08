@@ -408,8 +408,8 @@ CREATE EXTERNAL TABLE tmp_dim_date_info (
     `holiday_id` STRING COMMENT '节假日'
 ) COMMENT '时间维度表'
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
-LOCATION '/warehouse/gmall/tmp/tmp_dim_date_info/';
---将数据文件上传到HFDS上临时表路径/warehouse/gmall/tmp/tmp_dim_date_info
+LOCATION 'hdfs://Flink01:8020/spark/gmall/tmp/tmp_dim_date_info/';
+--将数据文件上传到HFDS上临时表路径hdfs://Flink01:8020/spark/gmall/tmp/tmp_dim_date_info
 --执行以下语句将其导入时间维度表
 insert overwrite table dim_date select * from tmp_dim_date_info;
 --检查数据是否导入成功

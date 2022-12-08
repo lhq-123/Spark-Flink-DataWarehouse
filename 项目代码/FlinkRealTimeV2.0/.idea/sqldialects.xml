@@ -2,9 +2,16 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/../../模拟数据/业务数据/gmall.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/OfflineAnalysis/src/main/SourceCode/ads/Traffic/User_access_path.sql" dialect="HiveQL" />
     <file url="file://$PROJECT_DIR$/OfflineAnalysis/src/main/SourceCode/dim/ddl/dimension_ddl.sql" dialect="HiveQL" />
+    <file url="file://$PROJECT_DIR$/OfflineAnalysis/src/main/SourceCode/dwd/ddl/fact_ddl.sql" dialect="HiveQL" />
+    <file url="file://$PROJECT_DIR$/OfflineAnalysis/src/main/SourceCode/dws/History_to_present_summary/ddl/Transaction_domain.sql" dialect="HiveQL" />
+    <file url="file://$PROJECT_DIR$/OfflineAnalysis/src/main/SourceCode/dws/History_to_present_summary/ddl/User_domain.sql" dialect="HiveQL" />
+    <file url="file://$PROJECT_DIR$/OfflineAnalysis/src/main/SourceCode/dws/Last_one_day_summary/ddl/Traffic_domains.sql" dialect="HiveQL" />
+    <file url="file://$PROJECT_DIR$/OfflineAnalysis/src/main/SourceCode/dws/Last_one_day_summary/ddl/Transaction_domain.sql" dialect="HiveQL" />
     <file url="file://$PROJECT_DIR$/OfflineAnalysis/src/main/SourceCode/ods/ddl/business_ddl.sql" dialect="HiveQL" />
     <file url="file://$PROJECT_DIR$/OfflineAnalysis/src/main/SourceCode/ods/ddl/userlog_dml.sql" dialect="SparkSQL" />
+    <file url="file://$PROJECT_DIR$/OfflineAnalysis/src/main/SourceCode/report/mysql/bi.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/../../项目脚本/metastore .sql" dialect="MySQL" />
   </component>
 </project>
