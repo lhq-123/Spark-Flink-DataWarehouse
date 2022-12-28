@@ -30,13 +30,13 @@ import java.util.concurrent.TimeUnit;
  *   //数据流：web/app -> nginx -> SpringBoot -> Mysql -> FlinkApp -> Kafka(ods) -> FlinkApp -> Kafka/Phoenix(dwd-dwm) -> FlinkApp(redis) -> Kafka(dwm)
  *   //程  序：MockDb -> Mysql -> FlinkCDC -> Kafka(ZK) -> BaseDbApp -> Kafka/Phoenix(zk/hdfs/hbase) -> OrderWideApp(Redis) -> Kafka
  */
-public class OT extends BaseTask {
+public class orderWide extends BaseTask {
     public static void main(String[] args) throws Exception {
         //TODO 1）获取执行环境
-        StreamExecutionEnvironment env = getEnv(OT.class.getSimpleName());
+        StreamExecutionEnvironment env = getEnv(orderWide.class.getSimpleName());
         //TODO 2）读取Kafka 主题的数据 并转换为JavaBean对象&提取时间戳生成WaterMark
             //TODO 2.1）处理orderInfo主题数据
-        SingleOutputStreamOperator<OrderInfo> orderInfoDS = env.addSource(BaseTask.getKafkaSource(ConfigLoader.get(""), ConfigLoader.get("")))
+        SingleOutputStreamOperator<OrderInfo> orderInfoDS = env.addSource(BaseTask.getKafkaSource(ConfigLoader.get("kafka_dwd_orderInfo"), ConfigLoader.get("group_dwm_oi")))
                 .map(line -> {
                     OrderInfo orderInfo = JSON.parseObject(line, OrderInfo.class);
                     String create_time = orderInfo.getCreate_time();
@@ -57,7 +57,7 @@ public class OT extends BaseTask {
                         }));
         orderInfoDS.print("orderInfo主题数据:");
             //TODO 2.2）处理orderDetail主题数据
-        SingleOutputStreamOperator<OrderDetail> orderDetailDS = env.addSource(BaseTask.getKafkaSource(ConfigLoader.get(""), ConfigLoader.get("")))
+        SingleOutputStreamOperator<OrderDetail> orderDetailDS = env.addSource(BaseTask.getKafkaSource(ConfigLoader.get("kafka_dwd_orderDetail"), ConfigLoader.get("group_dwm_od")))
                 .map(line -> {
                     OrderDetail orderDetail = JSON.parseObject(line, OrderDetail.class);
                     String create_time = orderDetail.getCreate_time();
@@ -187,8 +187,8 @@ public class OT extends BaseTask {
         //TODO 5）将数据写入Kafka
         orderWideWithCategory3DS
                 .map(JSONObject::toJSONString)
-                .addSink(BaseTask.getKafkaProducer(ConfigLoader.get("")));
+                .addSink(BaseTask.getKafkaProducer(ConfigLoader.get("kafka_dwm_orderWide")));
         //TODO 6）启动任务
-        env.execute("OT");
+        env.execute("OrderWideTable");
     }
 }

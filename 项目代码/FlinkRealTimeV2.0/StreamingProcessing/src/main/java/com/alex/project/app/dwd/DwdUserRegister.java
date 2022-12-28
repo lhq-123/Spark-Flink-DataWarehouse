@@ -9,28 +9,13 @@ import java.time.ZoneId;
 
 //数据流：Web/app -> nginx -> 业务服务器(Mysql) -> Maxwell -> Kafka(ODS) -> FlinkApp -> Kafka(DWD)
 //程  序：Mock  ->  Mysql  ->  Maxwell -> Kafka(ZK)  ->  DwdUserRegister -> Kafka(ZK)
-public class DwdUserRegister {
+public class DwdUserRegister extends BaseTask{
     public static void main(String[] args) throws Exception {
 
         // TODO 1. 环境准备
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1);
+        StreamExecutionEnvironment env = getEnv(DwdUserRegister.class.getSimpleName());
         StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
         tableEnv.getConfig().setLocalTimeZone(ZoneId.of("GMT+8"));
-
-        // TODO 2. 启用状态后端
-//        env.enableCheckpointing(3000L, CheckpointingMode.EXACTLY_ONCE);
-//        env.getCheckpointConfig().setCheckpointTimeout(60 * 1000L);
-//        env.getCheckpointConfig().enableExternalizedCheckpoints(
-//                CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION
-//        );
-//        env.getCheckpointConfig().setMinPauseBetweenCheckpoints(3000L);
-//        env.setRestartStrategy(
-//                RestartStrategies.failureRateRestart(3, Time.days(1L), Time.minutes(3L))
-//        );
-//        env.setStateBackend(new HashMapStateBackend());
-//        env.getCheckpointConfig().setCheckpointStorage("hdfs://hadoop102:8020/ck");
-//        System.setProperty("HADOOP_USER_NAME", "atguigu");
 
         // TODO 3. 从 Kafka 读取业务数据，封装为 Flink SQL 表
         tableEnv.executeSql("create table topic_db(" +

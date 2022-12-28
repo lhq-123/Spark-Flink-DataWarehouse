@@ -5,32 +5,18 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 
+import java.time.Duration;
+
 //数据流：Web/app -> nginx -> 业务服务器(Mysql) -> Maxwell -> Kafka(ODS) -> FlinkApp -> Kafka(DWD)
 //程  序：Mock  ->  Mysql  ->  Maxwell -> Kafka(ZK)  ->  DwdToolCouponOrder -> Kafka(ZK)
-public class DwdToolCouponOrder {
+public class DwdToolCouponOrder extends BaseTask{
     public static void main(String[] args) throws Exception {
 
         // TODO 1. 环境准备
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1);
+        StreamExecutionEnvironment env = getEnv(DwdToolCouponOrder.class.getSimpleName());
         StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
-
-        // TODO 2. 状态后端设置
-//        env.enableCheckpointing(3000L, CheckpointingMode.EXACTLY_ONCE);
-//        env.getCheckpointConfig().setCheckpointTimeout(60 * 1000L);
-//        env.getCheckpointConfig().setMinPauseBetweenCheckpoints(3000L);
-//        env.getCheckpointConfig().enableExternalizedCheckpoints(
-//                CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION
-//        );
-//        env.setRestartStrategy(RestartStrategies.failureRateRestart(
-//                3, Time.days(1), Time.minutes(1)
-//        ));
-//        env.setStateBackend(new HashMapStateBackend());
-//        env.getCheckpointConfig().setCheckpointStorage(
-//                "hdfs://hadoop102:8020/ck"
-//        );
-//        System.setProperty("HADOOP_USER_NAME", "atguigu");
-
+        //设置状态的TTL  生产环境设置为最大乱序程度
+        tableEnv.getConfig().setIdleStateRetention(Duration.ofSeconds(5));
         // TODO 3. 从 Kafka 读取业务数据，封装为 Flink SQL 表
         tableEnv.executeSql("create table `topic_db` ( " +
                 "`database` string, " +

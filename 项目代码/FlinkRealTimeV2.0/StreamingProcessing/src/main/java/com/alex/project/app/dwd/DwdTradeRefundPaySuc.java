@@ -7,20 +7,18 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 
+import java.time.Duration;
+
 //数据流：Web/app -> nginx -> 业务服务器(Mysql) -> Maxwell -> Kafka(ODS) -> FlinkApp -> Kafka(DWD)
 //程  序：Mock  ->  Mysql  ->  Maxwell -> Kafka(ZK)  ->  DwdTradeRefundPaySuc -> Kafka(ZK)
-public class DwdTradeRefundPaySuc {
+public class DwdTradeRefundPaySuc extends BaseTask{
     public static void main(String[] args) throws Exception {
 
         // TODO 1. 环境准备
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1);
+        StreamExecutionEnvironment env = getEnv(DwdTradeRefundPaySuc.class.getSimpleName());
         StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
-
-        // 获取配置对象
-        Configuration configuration = tableEnv.getConfig().getConfiguration();
-        // 为表关联时状态中存储的数据设置过期时间
-        configuration.setString("table.exec.state.ttl", "5 s");
+        //设置状态的TTL  设置为最大乱序程度
+        tableEnv.getConfig().setIdleStateRetention(Duration.ofSeconds(905));
 
         // TODO 2. 状态后端设置
 //        env.enableCheckpointing(3000L, CheckpointingMode.EXACTLY_ONCE);

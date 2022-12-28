@@ -1,42 +1,26 @@
 package com.alex.project.app.dwd;
 
 import com.alex.project.app.base.BaseTask;
+import com.alex.project.app.dwm.JumpDetail;
 import com.alex.project.utils.MysqlUtil;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
+import org.codehaus.jackson.map.Serializers;
+
+import java.time.Duration;
 
 //数据流：Web/app -> nginx -> 业务服务器(Mysql) -> Maxwell -> Kafka(ODS) -> FlinkApp -> Kafka(DWD)
 //程  序：Mock  ->  Mysql  ->  Maxwell -> Kafka(ZK)  ->  DwdTradeOrderRefund -> Kafka(ZK)
-public class DwdTradeOrderRefund {
+public class DwdTradeOrderRefund extends BaseTask {
     public static void main(String[] args) throws Exception {
 
         // TODO 1. 环境准备
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1);
+        StreamExecutionEnvironment env = getEnv(DwdTradeOrderRefund.class.getSimpleName());
         StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
-
-        // 获取配置对象
-        Configuration configuration = tableEnv.getConfig().getConfiguration();
-        // 为表关联时状态中存储的数据设置过期时间
-        configuration.setString("table.exec.state.ttl", "5 s");
-
-        // TODO 2. 状态后端设置
-//        env.enableCheckpointing(3000L, CheckpointingMode.EXACTLY_ONCE);
-//        env.getCheckpointConfig().setCheckpointTimeout(60 * 1000L);
-//        env.getCheckpointConfig().setMinPauseBetweenCheckpoints(3000L);
-//        env.getCheckpointConfig().enableExternalizedCheckpoints(
-//                CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION
-//        );
-//        env.setRestartStrategy(RestartStrategies.failureRateRestart(
-//                3, Time.days(1), Time.minutes(1)
-//        ));
-//        env.setStateBackend(new HashMapStateBackend());
-//        env.getCheckpointConfig().setCheckpointStorage(
-//                "hdfs://hadoop102:8020/ck"
-//        );
-//        System.setProperty("HADOOP_USER_NAME", "atguigu");
+        //设置状态的TTL  设置为最大乱序程度
+        tableEnv.getConfig().setIdleStateRetention(Duration.ofSeconds(5));
 
         // TODO 3. 从 Kafka 读取 topic_db 数据，封装为 Flink SQL 表
         tableEnv.executeSql("create table topic_db(" +

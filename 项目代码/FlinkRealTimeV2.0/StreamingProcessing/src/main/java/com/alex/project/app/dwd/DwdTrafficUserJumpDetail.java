@@ -25,24 +25,12 @@ import java.util.Map;
 
 //数据流：web/app -> Nginx -> 日志服务器(.log) -> Flume -> Kafka(ODS) -> FlinkApp -> Kafka(DWD) -> FlinkApp -> Kafka(DWD)
 //程  序：     Mock(lg.sh) -> Flume(f1) -> Kafka(ZK) -> BaseLogApp -> Kafka(ZK) -> DwdTrafficUserJumpDetail -> Kafka(ZK)
-public class DwdTrafficUserJumpDetail {
+public class DwdTrafficUserJumpDetail extends BaseTask{
 
     public static void main(String[] args) throws Exception {
 
         //TODO 1.获取执行环境
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1); //生产环境中设置为Kafka主题的分区数
-
-        //1.1 开启CheckPoint
-        //env.enableCheckpointing(5 * 60000L, CheckpointingMode.EXACTLY_ONCE);
-        //env.getCheckpointConfig().setCheckpointTimeout(10 * 60000L);
-        //env.getCheckpointConfig().setMaxConcurrentCheckpoints(2);
-        //env.setRestartStrategy(RestartStrategies.fixedDelayRestart(3, 5000L));
-
-        //1.2 设置状态后端
-        //env.setStateBackend(new HashMapStateBackend());
-        //env.getCheckpointConfig().setCheckpointStorage("hdfs://hadoop102:8020/211126/ck");
-        //System.setProperty("HADOOP_USER_NAME", "atguigu");
+        StreamExecutionEnvironment env = getEnv(DwdTrafficUserJumpDetail.class.getSimpleName());
 
         //TODO 2.读取Kafka 页面日志主题数据创建流
         String topic = "dwd_traffic_page_log";

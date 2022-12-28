@@ -7,16 +7,19 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 
+import java.time.Duration;
+
 //数据流：Web/app -> nginx -> 业务服务器(Mysql) -> Maxwell -> Kafka(ODS) -> FlinkApp -> Kafka(DWD)
 //程  序：Mock  ->  Mysql  ->  Maxwell -> Kafka(ZK)  ->  DwdTradeCartAdd -> Kafka(ZK)
-public class DwdTradeCartAdd {
+public class DwdTradeCartAdd extends BaseTask{
 
     public static void main(String[] args) throws Exception {
 
         //TODO 1.获取执行环境
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1);
+        StreamExecutionEnvironment env = getEnv(DwdTradeCartAdd.class.getSimpleName());
         StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
+        //设置状态的TTL  生产环境设置为最大乱序程度
+        tableEnv.getConfig().setIdleStateRetention(Duration.ofSeconds(5));
 
         //TODO 2.使用DDL方式读取 topic_db 主题的数据创建表
         tableEnv.executeSql(BaseTask.getTopicDb("cart_add_211126"));

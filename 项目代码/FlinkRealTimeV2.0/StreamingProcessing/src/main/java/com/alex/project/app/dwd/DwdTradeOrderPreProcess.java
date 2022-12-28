@@ -10,27 +10,14 @@ import java.time.Duration;
 
 //数据流：Web/app -> nginx -> 业务服务器(Mysql) -> Maxwell -> Kafka(ODS) -> FlinkApp -> Kafka(DWD)
 //程  序：Mock  ->  Mysql  ->  Maxwell -> Kafka(ZK)  ->  DwdTradeOrderPreProcess -> Kafka(ZK)
-public class DwdTradeOrderPreProcess {
+public class DwdTradeOrderPreProcess extends BaseTask{
 
     public static void main(String[] args) throws Exception {
 
         //TODO 1.获取执行环境
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1); //生产环境中设置为Kafka主题的分区数
+        StreamExecutionEnvironment env = getEnv(DwdTradeOrderPreProcess.class.getSimpleName());
         StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
-
-        //1.1 开启CheckPoint
-        //env.enableCheckpointing(5 * 60000L, CheckpointingMode.EXACTLY_ONCE);
-        //env.getCheckpointConfig().setCheckpointTimeout(10 * 60000L);
-        //env.getCheckpointConfig().setMaxConcurrentCheckpoints(2);
-        //env.setRestartStrategy(RestartStrategies.fixedDelayRestart(3, 5000L));
-
-        //1.2 设置状态后端
-        //env.setStateBackend(new HashMapStateBackend());
-        //env.getCheckpointConfig().setCheckpointStorage("hdfs://hadoop102:8020/211126/ck");
-        //System.setProperty("HADOOP_USER_NAME", "atguigu");
-
-        //1.3 设置状态的TTL  生产环境设置为最大乱序程度
+        //1.3 设置状态的TTL  设置为最大乱序程度
         tableEnv.getConfig().setIdleStateRetention(Duration.ofSeconds(5));
 
         //TODO 2.创建 topic_db 表

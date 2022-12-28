@@ -32,12 +32,12 @@ import java.util.Map;
  *  跳出率就是用跳出次数除以访问次数
  *  用户跳出事件，本质上就是一个条件事件加一个超时事件的组合
  */
-public class JR extends BaseTask {
+public class JumpDetail extends BaseTask {
     public static void main(String[] args) throws Exception {
         //TODO 1）获取执行环境
-        StreamExecutionEnvironment env = getEnv(JR.class.getSimpleName());
+        StreamExecutionEnvironment env = getEnv(JumpDetail.class.getSimpleName());
         //TODO 2）读取kafka的dwd_page_log的数据
-        FlinkKafkaConsumer<String> kafkaSource = BaseTask.getKafkaSource(ConfigLoader.get("kafka.dwd_topic1"), ConfigLoader.get("group.dwm_id2"));
+        FlinkKafkaConsumer<String> kafkaSource = BaseTask.getKafkaSource(ConfigLoader.get("kafka_dwd_page"), ConfigLoader.get("group_dwm_jr"));
         DataStreamSource<String> kafkaDS = env.addSource(kafkaSource);
         //TODO 3）将数据转换为JSON对象并提取时间戳生成watermark
         SingleOutputStreamOperator<JSONObject> jsonObjDS = kafkaDS.map(JSON::parseObject)
@@ -95,8 +95,8 @@ public class JR extends BaseTask {
         DataStream<JSONObject> unionDS = selectDS.union(timeOutDS);
         //TODO 9）将数据写入kafka作为DWM层
         unionDS.print();
-        unionDS.map(JSON::toString).addSink(BaseTask.getKafkaProducer("kafka.dwm_topic2"));
+        unionDS.map(JSON::toString).addSink(BaseTask.getKafkaProducer("kafka_dwm_jumpRate"));
         //TODO 10）启动任务
-        env.execute("JR");
+        env.execute("JumpDetail");
     }
 }

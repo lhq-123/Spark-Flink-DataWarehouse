@@ -36,22 +36,6 @@ public class DwsTradeCartAddUuWindow {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
 
-        // 1.1 状态后端设置
-//        env.enableCheckpointing(3000L, CheckpointingMode.EXACTLY_ONCE);
-//        env.getCheckpointConfig().setCheckpointTimeout(60 * 1000L);
-//        env.getCheckpointConfig().setMinPauseBetweenCheckpoints(3000L);
-//        env.getCheckpointConfig().enableExternalizedCheckpoints(
-//                CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION
-//        );
-//        env.setRestartStrategy(RestartStrategies.failureRateRestart(
-//                3, Time.days(1), Time.minutes(1)
-//        ));
-//        env.setStateBackend(new HashMapStateBackend());
-//        env.getCheckpointConfig().setCheckpointStorage(
-//                "hdfs://hadoop102:8020/ck"
-//        );
-//        System.setProperty("HADOOP_USER_NAME", "atguigu");
-
         //TODO 2.读取 Kafka DWD层 加购事实表
         String topic = "dwd_trade_cart_add";
         String groupId = "dws_trade_cart_add_uu_window_211126";

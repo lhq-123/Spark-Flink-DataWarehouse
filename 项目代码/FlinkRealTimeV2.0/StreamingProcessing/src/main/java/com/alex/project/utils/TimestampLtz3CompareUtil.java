@@ -1,6 +1,5 @@
 package com.alex.project.utils;
 
-import java.util.Comparator;
 
 public class TimestampLtz3CompareUtil {
 

@@ -23,12 +23,12 @@ import java.text.SimpleDateFormat;
  * @create 2022-12-01 15:07
  * @Description  根据dwd层区分的页面日志数据中计算访客UV
  */
-public class UV extends BaseTask {
+public class DailActiveUser extends BaseTask {
     public static void main(String[] args) throws Exception {
         //TODO 1）获取执行环境
-        StreamExecutionEnvironment env = getEnv(UV.class.getSimpleName());
+        StreamExecutionEnvironment env = getEnv(DailActiveUser.class.getSimpleName());
         //TODO 2）读取kafka的dwd_page_log的数据
-        FlinkKafkaConsumer<String> kafkaSource = BaseTask.getKafkaSource(ConfigLoader.get("kafka.dwd_topic1"), ConfigLoader.get("group.dwm_id1"));
+        FlinkKafkaConsumer<String> kafkaSource = BaseTask.getKafkaSource(ConfigLoader.get("kafka_dwd_page"), ConfigLoader.get("group_dwm_uv"));
         DataStreamSource<String> kafkaDS = env.addSource(kafkaSource);
         //TODO 3）将数据转换为JSON对象
         SingleOutputStreamOperator<JSONObject> jsonObjDS = kafkaDS.map(JSON::parseObject);
@@ -71,8 +71,8 @@ public class UV extends BaseTask {
         });
         //打印测试
         uvDS.print();
-        uvDS.map(JSON::toString).addSink(BaseTask.getKafkaProducer(ConfigLoader.get("kafka.dwm_topic1")));
+        uvDS.map(JSON::toString).addSink(BaseTask.getKafkaProducer(ConfigLoader.get("kafka_dwm_userVisit")));
         //TODO 5）启动任务
-        env.execute("UV");
+        env.execute("DailActiveUser");
     }
 }

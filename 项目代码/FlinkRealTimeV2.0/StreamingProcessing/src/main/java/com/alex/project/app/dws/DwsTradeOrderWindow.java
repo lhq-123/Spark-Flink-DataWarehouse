@@ -38,17 +38,6 @@ public class DwsTradeOrderWindow {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1); //生产环境中设置为Kafka主题的分区数
 
-        //1.1 开启CheckPoint
-        //env.enableCheckpointing(5 * 60000L, CheckpointingMode.EXACTLY_ONCE);
-        //env.getCheckpointConfig().setCheckpointTimeout(10 * 60000L);
-        //env.getCheckpointConfig().setMaxConcurrentCheckpoints(2);
-        //env.setRestartStrategy(RestartStrategies.fixedDelayRestart(3, 5000L));
-
-        //1.2 设置状态后端
-        //env.setStateBackend(new HashMapStateBackend());
-        //env.getCheckpointConfig().setCheckpointStorage("hdfs://hadoop102:8020/211126/ck");
-        //System.setProperty("HADOOP_USER_NAME", "atguigu");
-
         //1.3 设置状态的TTL  生产环境设置为最大乱序程度
         //tableEnv.getConfig().setIdleStateRetention(Duration.ofSeconds(5));
 
