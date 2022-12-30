@@ -1,0 +1,10 @@
+com\atguigu\gmall2020\mock\db\util\RandomDate.class
+com\atguigu\gmall2020\mock\db\util\RandomNum.class
+com\atguigu\gmall2020\mock\db\util\RanOpt.class
+com\atguigu\gmall2020\mock\db\util\RandomName.class
+com\atguigu\gmall2020\mock\db\util\RandomOptionGroup$Builder.class
+com\atguigu\gmall2020\mock\db\util\RandomOptionGroup.class
+com\atguigu\gmall2020\mock\db\util\ConfigUtil.class
+com\atguigu\gmall2020\mock\db\util\ParamUtil.class
+com\atguigu\gmall2020\mock\db\util\RandomEmail.class
+com\atguigu\gmall2020\mock\db\util\RandomNumString.class

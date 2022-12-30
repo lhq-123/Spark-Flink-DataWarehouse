@@ -1,0 +1,8 @@
+[
+  {"path":["home","good_list","good_detail","cart","trade","payment"],"rate":20 },
+  {"path":["home","search","good_list","good_detail","login","good_detail","cart","trade","payment"],"rate":50 },
+  {"path":["home","mine","orders_unpaid","trade","payment"],"rate":10 },
+  {"path":["home","mine","orders_unpaid","good_detail","good_spec","comments","trade","payment"],"rate":10 },
+  {"path":["home","mine","orders_unpaid","good_detail","good_spec","comments","home"],"rate":10 }
+
+]
