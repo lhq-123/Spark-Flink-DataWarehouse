@@ -36,7 +36,7 @@ public class KeywordUtil {
 
     public static void main(String[] args) throws IOException {
 
-        System.out.println(splitKeyWord("尚硅谷大数据项目之实时数仓"));
+        System.out.println(splitKeyWord("xxxix"));
 
     }
 }

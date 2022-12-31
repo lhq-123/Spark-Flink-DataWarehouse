@@ -24,7 +24,7 @@ public class DwdInteractionFavorAdd extends BaseTask{
                 "`type` string, " +
                 "`data` map<string, string>, " +
                 "`ts` string " +
-                ")" + BaseTask.getKafkaDDL("topic_db", "dwd_interaction_favor_add_211126"));
+                ")" + BaseTask.getKafkaDDL("topic_db", "dwd_interaction_favor_add"));
 
         // TODO 4. 读取收藏表数据
         Table favorInfo = tableEnv.sqlQuery("select " +

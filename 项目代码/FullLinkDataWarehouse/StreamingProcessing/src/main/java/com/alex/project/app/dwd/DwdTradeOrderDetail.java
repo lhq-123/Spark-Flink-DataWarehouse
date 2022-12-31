@@ -66,7 +66,7 @@ public class DwdTradeOrderDetail extends BaseTask{
                 "    `type` string, " +
                 "    `old` map<string,string>, " +
                 "    `row_op_ts` TIMESTAMP_LTZ(3) " +
-                ")" + BaseTask.getKafkaDDL("dwd_trade_order_pre_process", "order_detail_211126"));
+                ")" + BaseTask.getKafkaDDL("dwd_trade_order_pre_process", "order_detail"));
 
         //TODO 3.过滤出下单数据，即新增数据
         Table filteredTable = tableEnv.sqlQuery("" +

@@ -25,7 +25,7 @@ public class DwdToolCouponPay extends BaseTask{
                 "`type` string, " +
                 "`old` string, " +
                 "`ts` string " +
-                ")" + BaseTask.getKafkaDDL("topic_db", "dwd_tool_coupon_pay_211126"));
+                ")" + BaseTask.getKafkaDDL("topic_db", "dwd_tool_coupon_pay"));
 
         // TODO 4. 读取优惠券领用表数据，筛选优惠券使用（支付）数据
         Table couponUsePay = tableEnv.sqlQuery("select " +

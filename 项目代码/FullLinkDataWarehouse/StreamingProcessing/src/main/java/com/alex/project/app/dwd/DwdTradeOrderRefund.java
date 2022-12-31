@@ -31,7 +31,7 @@ public class DwdTradeOrderRefund extends BaseTask {
                 "`old` map<string, string>, " +
                 "`proc_time` as PROCTIME(), " +
                 "`ts` string " +
-                ")" + BaseTask.getKafkaDDL("topic_db", "order_refund_211126"));
+                ")" + BaseTask.getKafkaDDL("topic_db", "order_refund"));
 
         // TODO 4. 读取退单表数据
         Table orderRefundInfo = tableEnv.sqlQuery("select " +

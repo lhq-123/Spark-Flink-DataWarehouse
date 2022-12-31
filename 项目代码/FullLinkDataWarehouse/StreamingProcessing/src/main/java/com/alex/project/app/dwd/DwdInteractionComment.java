@@ -9,18 +9,25 @@ import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 
 import java.time.Duration;
 
-//数据流：Web/app -> nginx -> 业务服务器(Mysql) -> Maxwell -> Kafka(ODS) -> FlinkApp -> Kafka(DWD)
-//程  序：Mock  ->  Mysql  ->  Maxwell -> Kafka(ZK)  ->  DwdInteractionComment -> Kafka(ZK)
+/**
+ * @author Alex_liu
+ * @create 2022-11-29
+ * @Description
+ *
+ * 数据流：Web/app -> nginx -> 业务服务器(Mysql) -> Maxwell -> Kafka(ODS) -> FlinkApp -> Kafka(DWD)
+ * 程  序：Mock  ->  Mysql  ->  Maxwell -> Kafka(ZK)  ->  DwdInteractionComment -> Kafka(ZK)
+ */
+
 public class DwdInteractionComment extends BaseTask {
     public static void main(String[] args) throws Exception {
 
-        // TODO 1. 环境准备
+        // TODO 1）获取执行环境
         StreamExecutionEnvironment env = getEnv(DwdInteractionComment.class.getSimpleName());
         StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
         //设置状态的TTL  设置为最大乱序程度
         tableEnv.getConfig().setIdleStateRetention(Duration.ofSeconds(5));
 
-        // TODO 3. 从 Kafka 读取业务数据，封装为 Flink SQL 表
+        // TODO 2）从 Kafka 读取业务数据，封装为 Flink SQL 表
         tableEnv.executeSql("create table topic_db(" +
                 "`database` string, " +
                 "`table` string, " +
@@ -28,9 +35,9 @@ public class DwdInteractionComment extends BaseTask {
                 "`data` map<string, string>, " +
                 "`proc_time` as PROCTIME(), " +
                 "`ts` string " +
-                ")" + BaseTask.getKafkaDDL("topic_db", "dwd_interaction_comment_211126"));
+                ")" + BaseTask.getKafkaDDL("topic_db", "dwd_interaction_comment"));
 
-        // TODO 4. 读取评论表数据
+        // TODO 3）读取评论表数据
         Table commentInfo = tableEnv.sqlQuery("select " +
                 "data['id'] id, " +
                 "data['user_id'] user_id, " +
@@ -45,10 +52,10 @@ public class DwdInteractionComment extends BaseTask {
                 "and `type` = 'insert' ");
         tableEnv.createTemporaryView("comment_info", commentInfo);
 
-        // TODO 5. 建立 MySQL-LookUp 字典表
+        // TODO 4）建立 MySQL-LookUp 字典表
         tableEnv.executeSql(MysqlUtil.getBaseDicLookUpDDL());
 
-        // TODO 6. 关联两张表
+        // TODO 5）关联两张表
         Table resultTable = tableEnv.sqlQuery("select " +
                 "ci.id, " +
                 "ci.user_id, " +
@@ -65,7 +72,7 @@ public class DwdInteractionComment extends BaseTask {
                 "on ci.appraise = dic.dic_code");
         tableEnv.createTemporaryView("result_table", resultTable);
 
-        // TODO 7. 建立 Kafka-Connector dwd_interaction_comment 表
+        // TODO 6）建立 Kafka-Connector dwd_interaction_comment 表
         tableEnv.executeSql("create table dwd_interaction_comment( " +
                 "id string, " +
                 "user_id string, " +
@@ -78,7 +85,7 @@ public class DwdInteractionComment extends BaseTask {
                 "ts string " +
                 ")" + BaseTask.getKafkaSinkDDL("dwd_interaction_comment"));
 
-        // TODO 8. 将关联结果写入 Kafka-Connector 表
+        // TODO 7）将关联结果写入 Kafka-Connector 表
         tableEnv.executeSql("" +
                 "insert into dwd_interaction_comment select * from result_table");
     }

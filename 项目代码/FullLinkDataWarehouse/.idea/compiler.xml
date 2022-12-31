@@ -9,7 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="Flume_Interceptor" />
         <module name="Log" />
-        <module name="LoggingMock" />
+        <module name="Web" />
         <module name="StreamingProcessing" />
         <module name="DB" />
         <module name="OfflineAnalysis" />
@@ -21,6 +21,7 @@
       <module name="flume-interceptor" target="1.8" />
       <module name="gmall2020-mock-db" target="1.8" />
       <module name="Logger" target="1.8" />
+      <module name="LoggingMock" target="1.8" />
       <module name="MockData (2)" target="1.8" />
       <module name="WebUI" target="1.8" />
     </bytecodeTargetLevel>
@@ -32,6 +33,7 @@
       <module name="Log" options="-parameters" />
       <module name="LoggingMock" options="" />
       <module name="MockData" options="" />
+      <module name="Web" options="-parameters" />
       <module name="WebUI" options="-parameters" />
       <module name="gmall2020-mock-db" options="-parameters" />
     </option>

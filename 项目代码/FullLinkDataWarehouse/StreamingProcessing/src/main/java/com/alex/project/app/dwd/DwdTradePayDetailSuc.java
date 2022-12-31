@@ -22,7 +22,7 @@ public class DwdTradePayDetailSuc extends BaseTask{
         tableEnv.getConfig().setIdleStateRetention(Duration.ofSeconds(905));
 
         //TODO 2.读取TopicDB数据并过滤出支付成功数据
-        tableEnv.executeSql(BaseTask.getTopicDb("pay_detail_suc_211126"));
+        tableEnv.executeSql(BaseTask.getTopicDb("pay_detail_suc"));
         Table paymentInfo = tableEnv.sqlQuery("select " +
                 "data['user_id'] user_id, " +
                 "data['order_id'] order_id, " +
@@ -64,7 +64,7 @@ public class DwdTradePayDetailSuc extends BaseTask{
                 "split_total_amount string, " +  //删除","
                 //"ts string, " +
                 "row_op_ts timestamp_ltz(3) " +
-                ")" + BaseTask.getKafkaDDL("dwd_trade_order_detail","pay_detail_suc_order_211126"));
+                ")" + BaseTask.getKafkaDDL("dwd_trade_order_detail","pay_detail_suc_order"));
 
         //TODO 4.读取MySQL Base_Dic表
         tableEnv.executeSql(MysqlUtil.getBaseDicLookUpDDL());

@@ -25,7 +25,7 @@ public class DwdToolCouponOrder extends BaseTask{
                 "`type` string, " +
                 "`old` map<string, string>, " +
                 "`ts` string " +
-                ")" + BaseTask.getKafkaDDL("topic_db", "dwd_tool_coupon_order_211126"));
+                ")" + BaseTask.getKafkaDDL("topic_db", "dwd_tool_coupon_order"));
 
         // TODO 4. 读取优惠券领用表数据，筛选满足条件的优惠券下单数据
         Table couponUseOrder = tableEnv.sqlQuery("select " +

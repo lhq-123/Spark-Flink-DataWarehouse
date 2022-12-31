@@ -21,7 +21,7 @@ public class DwdTradeOrderPreProcess extends BaseTask{
         tableEnv.getConfig().setIdleStateRetention(Duration.ofSeconds(5));
 
         //TODO 2.创建 topic_db 表
-        tableEnv.executeSql(BaseTask.getTopicDb("order_pre_process_211126"));
+        tableEnv.executeSql(BaseTask.getTopicDb("order_pre_process"));
 
         //TODO 3.过滤出订单明细数据
         Table orderDetailTable = tableEnv.sqlQuery("" +

@@ -29,10 +29,10 @@ import java.text.SimpleDateFormat;
  * @create 2022-11-28 19:54
  * @Description  ods层已经将数据消费进kafka里，dwd层将kafka的数据读取出来，分为三类：页面日志、启动日志和曝光日志，将日志做拆分处理。写回kafka不同主题里
  *               页面日志输出到主流,启动日志输出到启动侧输出流,曝光日志输出到曝光侧输出流
- *   主要任务：0.将数据转换成JSONObject对象
- *           1.识别新老用户(不涉及业务操作，只是单纯的做个状态确认)
- *           2.利用侧输出流实现数据拆分
- *           3.将不同流的数据推送下游的 Kafka 的不同 Topic 中
+ *        主要任务：0.将数据转换成JSONObject对象
+ *                1.识别新老用户(不涉及业务操作，只是单纯的做个状态确认)
+ *                2.利用侧输出流实现数据拆分
+ *                3.将不同流的数据推送下游的 Kafka 的不同 Topic 中
  */
 public class DimAppLog extends BaseTask{
     public static void main(String[] args) throws Exception {
@@ -163,7 +163,7 @@ public class DimAppLog extends BaseTask{
         DataStream<String> displayDS = pageDS.getSideOutput(displayTag);
         DataStream<String> actionDS = pageDS.getSideOutput(actionTag);
         DataStream<String> errorDS = pageDS.getSideOutput(errorTag);
-        //打印
+        //打印数据
         startDS.print("启动日志>>>>>>");
         displayDS.print("曝光日志>>>>>>");
         actionDS.print("动作日志>>>>>>");

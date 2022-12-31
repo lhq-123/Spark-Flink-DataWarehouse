@@ -25,7 +25,7 @@ public class DwdToolCouponGet extends BaseTask{
                 "`data` map<string, string>, " +
                 "`type` string, " +
                 "`ts` string " +
-                ")" + BaseTask.getKafkaDDL("topic_db", "dwd_tool_coupon_get_211126"));
+                ")" + BaseTask.getKafkaDDL("topic_db", "dwd_tool_coupon_get"));
 
         // TODO 4. 读取优惠券领用数据，封装为表
         Table resultTable = tableEnv.sqlQuery("select " +

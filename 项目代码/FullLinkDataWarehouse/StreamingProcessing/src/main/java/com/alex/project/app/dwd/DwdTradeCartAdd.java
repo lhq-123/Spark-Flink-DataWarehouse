@@ -22,7 +22,7 @@ public class DwdTradeCartAdd extends BaseTask{
         tableEnv.getConfig().setIdleStateRetention(Duration.ofSeconds(5));
 
         //TODO 2.使用DDL方式读取 topic_db 主题的数据创建表
-        tableEnv.executeSql(BaseTask.getTopicDb("cart_add_211126"));
+        tableEnv.executeSql(BaseTask.getTopicDb("cart_add"));
 
         //TODO 3.过滤出加购数据
         Table cartAddTable = tableEnv.sqlQuery("" +

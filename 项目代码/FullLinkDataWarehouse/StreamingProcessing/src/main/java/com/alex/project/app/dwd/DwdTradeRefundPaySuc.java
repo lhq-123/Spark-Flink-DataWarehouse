@@ -45,7 +45,7 @@ public class DwdTradeRefundPaySuc extends BaseTask{
                 "`old` map<string, string>, " +
                 "`proc_time` as PROCTIME(), " +
                 "`ts` string " +
-                ")" + BaseTask.getKafkaDDL("topic_db", "refund_pay_suc_211126"));
+                ")" + BaseTask.getKafkaDDL("topic_db", "refund_pay_suc"));
 
         // TODO 4. 建立 MySQL-LookUp 字典表
         tableEnv.executeSql(MysqlUtil.getBaseDicLookUpDDL());

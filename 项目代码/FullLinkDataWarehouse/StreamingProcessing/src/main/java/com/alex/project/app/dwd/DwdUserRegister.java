@@ -24,7 +24,7 @@ public class DwdUserRegister extends BaseTask{
                 "`type` string, " +
                 "`data` map<string, string>, " +
                 "`ts` string " +
-                ")" + BaseTask.getKafkaDDL("topic_db", "dwd_trade_order_detail_211126"));
+                ")" + BaseTask.getKafkaDDL("topic_db", "dwd_trade_order_detail"));
 
         // TODO 4. 读取用户表数据
         Table userInfo = tableEnv.sqlQuery("select " +

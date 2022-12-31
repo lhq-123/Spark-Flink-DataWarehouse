@@ -65,7 +65,7 @@ public class DwdTradeCancelDetail extends BaseTask{
                 "    `coupon_use_id` string, " +
                 "    `type` string, " +
                 "    `old` map<string,string> " +
-                ")" + BaseTask.getKafkaDDL("dwd_trade_order_pre_process", "cancel_detail_211126"));
+                ")" + BaseTask.getKafkaDDL("dwd_trade_order_pre_process", "cancel_detail"));
 
         //TODO 3.过滤出取消订单数据
         Table filteredTable = tableEnv.sqlQuery("" +

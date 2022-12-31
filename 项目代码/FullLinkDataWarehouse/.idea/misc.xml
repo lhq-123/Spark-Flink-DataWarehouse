@@ -5,16 +5,11 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/LoggingMock/pom.xml" />
         <option value="$PROJECT_DIR$/MockData/pom.xml" />
         <option value="$PROJECT_DIR$/../../../MockData/pom.xml" />
         <option value="$PROJECT_DIR$/../MockData/pom.xml" />
+        <option value="$PROJECT_DIR$/Web/pom.xml" />
       </list>
-    </option>
-    <option name="ignoredFiles">
-      <set>
-        <option value="$PROJECT_DIR$/MockData/pom.xml" />
-      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">

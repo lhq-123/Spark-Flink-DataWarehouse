@@ -20,9 +20,9 @@ public class RedisUtil {
             jedisPoolConfig.setMinIdle(5); //最小闲置连接数
             jedisPoolConfig.setTestOnBorrow(true); //取连接的时候进行一下测试 ping pong
 
-            jedisPool = new JedisPool(jedisPoolConfig, "hadoop102", 6379, 1000);
+            jedisPool = new JedisPool(jedisPoolConfig, "Flink01", 6379, 1000);
 
-            System.out.println("开辟连接池");
+            System.out.println("创建连接池");
             return jedisPool.getResource();
 
         } else {

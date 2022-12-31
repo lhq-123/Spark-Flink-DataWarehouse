@@ -29,7 +29,7 @@ public class DwdTrafficUniqueVisitorDetail extends BaseTask{
 
         //TODO 2.读取Kafka 页面日志主题创建流
         String topic = "dwd_traffic_page_log";
-        String groupId = "unique_visitor_detail_211126";
+        String groupId = "unique_visitor_detail";
         DataStreamSource<String> kafkaDS = env.addSource(BaseTask.getKafkaSource(topic, groupId));
 
         //TODO 3.过滤掉上一跳页面不为null的数据并将每行数据转换为JSON对象
