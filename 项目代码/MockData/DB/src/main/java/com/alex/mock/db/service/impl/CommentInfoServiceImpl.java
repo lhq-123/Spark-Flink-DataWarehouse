@@ -1,7 +1,7 @@
 package com.alex.mock.db.service.impl;
 
 import com.  alex.mock.db.bean.*;
-import com.  alex.mock.db.constant.GmallConstant;
+import com.alex.mock.db.constant.Constant;
 import com.  alex.mock.db.mapper.CommentInfoMapper;
 import com.  alex.mock.db.mapper.SkuInfoMapper;
 import com.  alex.mock.db.mapper.UserInfoMapper;
@@ -56,7 +56,7 @@ public class CommentInfoServiceImpl extends ServiceImpl<CommentInfoMapper, Comme
         Integer userTotal = userInfoMapper.selectCount(new QueryWrapper<>());
 
         List<CommentInfo> commentInfoList= new ArrayList<>();
-        List<OrderInfo> orderInfoFinishList = orderInfoService.listWithDetail(new QueryWrapper<OrderInfo>().eq("order_status", GmallConstant.ORDER_STATUS_FINISH),true);
+        List<OrderInfo> orderInfoFinishList = orderInfoService.listWithDetail(new QueryWrapper<OrderInfo>().eq("order_status", Constant.ORDER_STATUS_FINISH),true);
         for (OrderInfo orderInfo : orderInfoFinishList) {
             for (OrderDetail orderDetail : orderInfo.getOrderDetailList()){
                 Long userId = RandomNum.getRandInt(1, userTotal)+0L;
@@ -70,8 +70,8 @@ public class CommentInfoServiceImpl extends ServiceImpl<CommentInfoMapper, Comme
     public  CommentInfo initCommentInfo( SkuInfo skuInfo,OrderInfo orderInfo,Long userId  ){
         Date date = ParamUtil.checkDate(mockDate);
         Integer[] appraiseRateWeight = ParamUtil.checkRate(this.appraiseRate,4);
-        RandomOptionGroup<String>  appraiseOptionGroup=new RandomOptionGroup(new RanOpt(GmallConstant.APPRAISE_GOOD,appraiseRateWeight[0]),
-                new RanOpt(GmallConstant.APPRAISE_SOSO,appraiseRateWeight[1]),new RanOpt(GmallConstant.APPRAISE_BAD,appraiseRateWeight[2]),new RanOpt(GmallConstant.APPRAISE_AUTO,appraiseRateWeight[3]) );
+        RandomOptionGroup<String>  appraiseOptionGroup=new RandomOptionGroup(new RanOpt(Constant.APPRAISE_GOOD,appraiseRateWeight[0]),
+                new RanOpt(Constant.APPRAISE_SOSO,appraiseRateWeight[1]),new RanOpt(Constant.APPRAISE_BAD,appraiseRateWeight[2]),new RanOpt(Constant.APPRAISE_AUTO,appraiseRateWeight[3]) );
 
 
         CommentInfo commentInfo = new CommentInfo();

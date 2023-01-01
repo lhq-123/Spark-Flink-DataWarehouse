@@ -23,6 +23,9 @@
       <module name="Logger" target="1.8" />
       <module name="LoggingMock" target="1.8" />
       <module name="MockData (2)" target="1.8" />
+      <module name="sparksql-cluster" target="1.8" />
+      <module name="SparkSqlClient" target="1.8" />
+      <module name="SparkSQLCluster" target="1.8" />
       <module name="WebUI" target="1.8" />
     </bytecodeTargetLevel>
   </component>

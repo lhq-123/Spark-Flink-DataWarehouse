@@ -36,8 +36,8 @@ public class DwdTradeRefundPaySuc extends BaseTask{
 //        );
 //        System.setProperty("HADOOP_USER_NAME", "atguigu");
 
-        // TODO 3. 从 Kafka 读取 topic_db 数据，封装为 Flink SQL 表
-        tableEnv.executeSql("create table topic_db(" +
+        // TODO 3. 从 Kafka 读取 ods_base_db 数据，封装为 Flink SQL 表
+        tableEnv.executeSql("create table ods_base_db(" +
                 "`database` string, " +
                 "`table` string, " +
                 "`type` string, " +
@@ -45,7 +45,7 @@ public class DwdTradeRefundPaySuc extends BaseTask{
                 "`old` map<string, string>, " +
                 "`proc_time` as PROCTIME(), " +
                 "`ts` string " +
-                ")" + BaseTask.getKafkaDDL("topic_db", "refund_pay_suc"));
+                ")" + BaseTask.getKafkaDDL("ods_base_db", "refund_pay_suc"));
 
         // TODO 4. 建立 MySQL-LookUp 字典表
         tableEnv.executeSql(MysqlUtil.getBaseDicLookUpDDL());
@@ -60,7 +60,7 @@ public class DwdTradeRefundPaySuc extends BaseTask{
                 "data['total_amount'] total_amount, " +
                 "proc_time, " +
                 "ts " +
-                "from topic_db " +
+                "from ods_base_db " +
                 "where `table` = 'refund_payment' "
 //                +
 //                "and `type` = 'update' " +
@@ -75,7 +75,7 @@ public class DwdTradeRefundPaySuc extends BaseTask{
                 "data['user_id'] user_id, " +
                 "data['province_id'] province_id, " +
                 "`old` " +
-                "from topic_db " +
+                "from ods_base_db " +
                 "where `table` = 'order_info' " +
                 "and `type` = 'update' "
                 +
@@ -90,7 +90,7 @@ public class DwdTradeRefundPaySuc extends BaseTask{
                         "data['sku_id'] sku_id, " +
                         "data['refund_num'] refund_num, " +
                         "`old` " +
-                        "from topic_db " +
+                        "from ods_base_db " +
                         "where `table` = 'order_refund_info' "
 //                        +
 //                        "and `type` = 'update' " +

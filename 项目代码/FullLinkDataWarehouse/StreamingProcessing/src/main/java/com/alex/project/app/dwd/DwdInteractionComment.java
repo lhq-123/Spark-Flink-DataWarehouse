@@ -28,14 +28,14 @@ public class DwdInteractionComment extends BaseTask {
         tableEnv.getConfig().setIdleStateRetention(Duration.ofSeconds(5));
 
         // TODO 2）从 Kafka 读取业务数据，封装为 Flink SQL 表
-        tableEnv.executeSql("create table topic_db(" +
+        tableEnv.executeSql("create table ods_base_db(" +
                 "`database` string, " +
                 "`table` string, " +
                 "`type` string, " +
                 "`data` map<string, string>, " +
                 "`proc_time` as PROCTIME(), " +
                 "`ts` string " +
-                ")" + BaseTask.getKafkaDDL("topic_db", "dwd_interaction_comment"));
+                ")" + BaseTask.getKafkaDDL("ods_base_db", "dwd_interaction_comment"));
 
         // TODO 3）读取评论表数据
         Table commentInfo = tableEnv.sqlQuery("select " +
@@ -47,7 +47,7 @@ public class DwdInteractionComment extends BaseTask {
                 "data['appraise'] appraise, " +
                 "proc_time, " +
                 "ts " +
-                "from topic_db " +
+                "from ods_base_db " +
                 "where `table` = 'comment_info' " +
                 "and `type` = 'insert' ");
         tableEnv.createTemporaryView("comment_info", commentInfo);

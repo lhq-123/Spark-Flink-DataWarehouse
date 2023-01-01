@@ -1,7 +1,0 @@
-com\alex\flume\interceptor\ETLInterceptor$Builder.class
-com\alex\flume\interceptor\TimestampAndTableNameInterceptor$Builder.class
-com\alex\flume\interceptor\ETLInterceptor.class
-com\alex\flume\interceptor\TimestampInterceptor.class
-com\alex\flume\interceptor\TimestampInterceptor$Builder.class
-com\alex\flume\utils\JSONUtil.class
-com\alex\flume\interceptor\TimestampAndTableNameInterceptor.class

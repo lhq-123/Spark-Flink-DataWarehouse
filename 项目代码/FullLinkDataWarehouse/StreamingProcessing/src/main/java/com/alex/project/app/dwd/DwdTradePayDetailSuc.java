@@ -29,7 +29,7 @@ public class DwdTradePayDetailSuc extends BaseTask{
                 "data['payment_type'] payment_type, " +
                 "data['callback_time'] callback_time, " +
                 "`pt` " +        //
-                "from topic_db " +
+                "from ods_base_db " +
                 "where `table` = 'payment_info' " +
                 "and `type` = 'update' " +
                 "and data['payment_status']='1602'");

@@ -64,8 +64,10 @@ public class ClickHouseUtil {
                         .withBatchSize(5)
                         .build(),
                 new JdbcConnectionOptions.JdbcConnectionOptionsBuilder()
-                        .withDriverName(ClickHouseConfig.CLICKHOUSE_DRIVER)
-                        .withUrl(ClickHouseConfig.CLICKHOUSE_URL)
+                        //.withDriverName(ClickHouseConfig.CLICKHOUSE_DRIVER)
+                        .withDriverName(ConfigLoader.get("clickhouse.driver"))
+                        //.withUrl(ClickHouseConfig.CLICKHOUSE_URL)
+                        .withUrl(ConfigLoader.get("clickhouse.url"))
                         .build());
 
     }

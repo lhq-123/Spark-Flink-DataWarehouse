@@ -21,7 +21,7 @@ public class DwdTradeCartAdd extends BaseTask{
         //设置状态的TTL  生产环境设置为最大乱序程度
         tableEnv.getConfig().setIdleStateRetention(Duration.ofSeconds(5));
 
-        //TODO 2.使用DDL方式读取 topic_db 主题的数据创建表
+        //TODO 2.使用DDL方式读取 ods_base_db 主题的数据创建表
         tableEnv.executeSql(BaseTask.getTopicDb("cart_add"));
 
         //TODO 3.过滤出加购数据
@@ -41,7 +41,7 @@ public class DwdTradeCartAdd extends BaseTask{
                 "    `data`['source_type'] source_type, " +
                 "    `data`['source_id'] source_id, " +
                 "    pt " +
-                "from topic_db " +
+                "from ods_base_db " +
                 "where `database` = 'gmall-211126-flink' " +
                 "and `table` = 'cart_info' " +
                 "and (`type` = 'insert' " +

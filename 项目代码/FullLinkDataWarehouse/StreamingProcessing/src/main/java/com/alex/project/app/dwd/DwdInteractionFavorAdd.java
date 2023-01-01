@@ -18,13 +18,13 @@ public class DwdInteractionFavorAdd extends BaseTask{
         //设置状态的TTL  生产环境设置为最大乱序程度
         tableEnv.getConfig().setIdleStateRetention(Duration.ofSeconds(5));
         // TODO 3. 从 Kafka 读取业务数据，封装为 Flink SQL 表
-        tableEnv.executeSql("create table topic_db(" +
+        tableEnv.executeSql("create table ods_base_db(" +
                 "`database` string, " +
                 "`table` string, " +
                 "`type` string, " +
                 "`data` map<string, string>, " +
                 "`ts` string " +
-                ")" + BaseTask.getKafkaDDL("topic_db", "dwd_interaction_favor_add"));
+                ")" + BaseTask.getKafkaDDL("ods_base_db", "dwd_interaction_favor_add"));
 
         // TODO 4. 读取收藏表数据
         Table favorInfo = tableEnv.sqlQuery("select " +
@@ -34,7 +34,7 @@ public class DwdInteractionFavorAdd extends BaseTask{
                 "date_format(data['create_time'],'yyyy-MM-dd') date_id, " +
                 "data['create_time'] create_time, " +
                 "ts " +
-                "from topic_db " +
+                "from ods_base_db " +
                 "where `table` = 'favor_info' " +
                 "and (`type` = 'insert' or (`type` = 'update' and data['is_cancel'] = '0'))" +
                 "");

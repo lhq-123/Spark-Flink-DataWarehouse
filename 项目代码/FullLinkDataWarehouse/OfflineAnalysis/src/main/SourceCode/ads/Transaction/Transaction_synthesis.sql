@@ -1,4 +1,4 @@
-1）建表语句
+--1）建表语句
 DROP TABLE IF EXISTS ads_order_by_province;
 CREATE EXTERNAL TABLE ads_order_by_province
 (
@@ -14,7 +14,7 @@ CREATE EXTERNAL TABLE ads_order_by_province
 ) COMMENT '各地区订单统计'
     ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
     LOCATION 'hdfs://Flink01:8020/spark/gmall/ads/ads_order_by_province/';
-2）数据装载
+--2）数据装载
 insert overwrite table ads_order_by_province
 select * from ads_order_by_province
 union

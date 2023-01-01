@@ -1,7 +1,7 @@
 package com.alex.mock.db.service.impl;
 
 import com.  alex.mock.db.bean.*;
-import com.  alex.mock.db.constant.GmallConstant;
+import com.alex.mock.db.constant.Constant;
 import com.  alex.mock.db.mapper.CouponUseMapper;
 import com.  alex.mock.db.service.CouponInfoService;
 import com.  alex.mock.db.service.CouponUseService;
@@ -12,7 +12,6 @@ import com.  alex.mock.db.util.RandomNum;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -71,7 +70,7 @@ public class CouponUseServiceImpl extends ServiceImpl<CouponUseMapper, CouponUse
         for (CouponInfo couponInfo : couponInfoList) {
             for (int userId = 1; userId <= userCount; userId++) {
                 CouponUse couponUse = new CouponUse();
-                couponUse.setCouponStatus(GmallConstant.COUPON_STATUS_UNUSED);
+                couponUse.setCouponStatus(Constant.COUPON_STATUS_UNUSED);
                 couponUse.setGetTime(date);
                 couponUse.setExpireTime(couponInfo.getExpireTime());
                 couponUse.setUserId(userId+0L);
@@ -106,7 +105,7 @@ public class CouponUseServiceImpl extends ServiceImpl<CouponUseMapper, CouponUse
 
 
                 for (CouponUse couponUse : couponUseList) {
-                    if (!couponUse.getCouponStatus().equals(GmallConstant.COUPON_STATUS_UNUSED)) {
+                    if (!couponUse.getCouponStatus().equals(Constant.COUPON_STATUS_UNUSED)) {
                         continue;
                     }
                     CouponInfo couponInfo = couponUse.getCouponInfo();
@@ -117,8 +116,8 @@ public class CouponUseServiceImpl extends ServiceImpl<CouponUseMapper, CouponUse
                     if (canUseCoupon) {
                         couponUse.setOrderId(orderInfo.getId());
                         couponUse.setOrderInfo(orderInfo );
-                        if (couponUse.getCouponStatus().equals(GmallConstant.COUPON_STATUS_UNUSED)) {
-                            couponUse.setCouponStatus(GmallConstant.COUPON_STATUS_USING);
+                        if (couponUse.getCouponStatus().equals(Constant.COUPON_STATUS_UNUSED)) {
+                            couponUse.setCouponStatus(Constant.COUPON_STATUS_USING);
                             couponUse.setUsingTime(date);
                         }
                         couponUseListForUpdate.add(couponUse);
@@ -158,7 +157,7 @@ public class CouponUseServiceImpl extends ServiceImpl<CouponUseMapper, CouponUse
         }
         CouponUse couponUse = new CouponUse();
         couponUse.setUsedTime(date);
-        couponUse.setCouponStatus(GmallConstant.COUPON_STATUS_USED);
+        couponUse.setCouponStatus(Constant.COUPON_STATUS_USED);
         update(couponUse,new QueryWrapper<CouponUse>().in("order_id",orderIdList));
 
 

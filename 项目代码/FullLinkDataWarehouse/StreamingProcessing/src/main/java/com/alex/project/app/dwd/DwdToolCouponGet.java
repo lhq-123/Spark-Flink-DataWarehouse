@@ -19,13 +19,13 @@ public class DwdToolCouponGet extends BaseTask{
         //设置状态的TTL  生产环境设置为最大乱序程度
         tableEnv.getConfig().setIdleStateRetention(Duration.ofSeconds(5));
         // TODO 3. 从 Kafka 读取业务数据，封装为 Flink SQL 表
-        tableEnv.executeSql("create table `topic_db`( " +
+        tableEnv.executeSql("create table `ods_base_db`( " +
                 "`database` string, " +
                 "`table` string, " +
                 "`data` map<string, string>, " +
                 "`type` string, " +
                 "`ts` string " +
-                ")" + BaseTask.getKafkaDDL("topic_db", "dwd_tool_coupon_get"));
+                ")" + BaseTask.getKafkaDDL("ods_base_db", "dwd_tool_coupon_get"));
 
         // TODO 4. 读取优惠券领用数据，封装为表
         Table resultTable = tableEnv.sqlQuery("select " +
@@ -35,7 +35,7 @@ public class DwdToolCouponGet extends BaseTask{
                 "date_format(data['get_time'],'yyyy-MM-dd') date_id, " +
                 "data['get_time'], " +
                 "ts " +
-                "from topic_db " +
+                "from ods_base_db " +
                 "where `table` = 'coupon_use' " +
                 "and `type` = 'insert' ");
         tableEnv.createTemporaryView("result_table", resultTable);

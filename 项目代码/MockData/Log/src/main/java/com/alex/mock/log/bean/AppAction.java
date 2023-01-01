@@ -21,7 +21,6 @@ public class AppAction {
 
      }
 
-
      ActionId action_id;
 
      ItemType item_type;

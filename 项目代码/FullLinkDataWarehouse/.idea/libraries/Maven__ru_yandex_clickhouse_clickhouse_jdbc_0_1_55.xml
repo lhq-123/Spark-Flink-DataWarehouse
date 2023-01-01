@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: ru.yandex.clickhouse:clickhouse-jdbc:0.1.55">
+    <CLASSES>
+      <root url="jar://D:/apache_maven/maven_repository/ru/yandex/clickhouse/clickhouse-jdbc/0.1.55/clickhouse-jdbc-0.1.55.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://D:/apache_maven/maven_repository/ru/yandex/clickhouse/clickhouse-jdbc/0.1.55/clickhouse-jdbc-0.1.55-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://D:/apache_maven/maven_repository/ru/yandex/clickhouse/clickhouse-jdbc/0.1.55/clickhouse-jdbc-0.1.55-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

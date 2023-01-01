@@ -2,7 +2,7 @@ package com.alex.mock.db.service.impl;
 
 import com.  alex.mock.db.bean.OrderInfo;
 import com.  alex.mock.db.bean.PaymentInfo;
-import com.  alex.mock.db.constant.GmallConstant;
+import com.alex.mock.db.constant.Constant;
 import com.  alex.mock.db.mapper.PaymentInfoMapper;
 import com.  alex.mock.db.service.CouponUseService;
 import com.  alex.mock.db.service.OrderInfoService;
@@ -15,7 +15,6 @@ import com.  alex.mock.db.util.RandomOptionGroup;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.  alex.mock.db.constant.GmallConstant.*;
+import static com.alex.mock.db.constant.Constant.*;
 
 /**
  * <p>
@@ -76,7 +75,7 @@ public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, Payme
 
 
         QueryWrapper<OrderInfo> orderInfoQueryWrapper = new QueryWrapper<>();
-        orderInfoQueryWrapper.eq("order_status",GmallConstant.ORDER_STATUS_UNPAID);
+        orderInfoQueryWrapper.eq("order_status", Constant.ORDER_STATUS_UNPAID);
         orderInfoQueryWrapper.orderByAsc("id");
         List<OrderInfo> orderInfoList = orderInfoService.listWithDetail(orderInfoQueryWrapper);
         List<PaymentInfo> paymentList=new ArrayList();
@@ -98,7 +97,7 @@ public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, Payme
                paymentInfo.setPaymentTime(date);
                paymentList.add(paymentInfo);
 
-               orderInfo.setOrderStatus(GmallConstant.ORDER_STATUS_PAID);
+               orderInfo.setOrderStatus(Constant.ORDER_STATUS_PAID);
            }
         }
 

@@ -20,7 +20,7 @@ public class DwdTradeOrderPreProcess extends BaseTask{
         //1.3 设置状态的TTL  设置为最大乱序程度
         tableEnv.getConfig().setIdleStateRetention(Duration.ofSeconds(5));
 
-        //TODO 2.创建 topic_db 表
+        //TODO 2.创建 ods_base_db 表
         tableEnv.executeSql(BaseTask.getTopicDb("order_pre_process"));
 
         //TODO 3.过滤出订单明细数据
@@ -39,7 +39,7 @@ public class DwdTradeOrderPreProcess extends BaseTask{
                 "    data['split_activity_amount'] split_activity_amount, " +
                 "    data['split_coupon_amount'] split_coupon_amount, " +
                 "    pt  " +
-                "from topic_db " +
+                "from ods_base_db " +
                 "where `database` = 'gmall-211126-flink' " +
                 "and `table` = 'order_detail' " +
                 "and `type` = 'insert'");
@@ -77,7 +77,7 @@ public class DwdTradeOrderPreProcess extends BaseTask{
                 "    data['refundable_time'] refundable_time, " +
                 "    `type`, " +
                 "    `old` " +
-                "from topic_db " +
+                "from ods_base_db " +
                 "where `database` = 'gmall-211126-flink' " +
                 "and `table` = 'order_info' " +
                 "and (`type` = 'insert' or `type` = 'update')");
@@ -96,7 +96,7 @@ public class DwdTradeOrderPreProcess extends BaseTask{
                 "    data['activity_rule_id'] activity_rule_id, " +
                 "    data['sku_id'] sku_id, " +
                 "    data['create_time'] create_time " +
-                "from topic_db " +
+                "from ods_base_db " +
                 "where `database` = 'gmall-211126-flink' " +
                 "and `table` = 'order_detail_activity' " +
                 "and `type` = 'insert'");
@@ -115,7 +115,7 @@ public class DwdTradeOrderPreProcess extends BaseTask{
                 "    data['coupon_use_id'] coupon_use_id, " +
                 "    data['sku_id'] sku_id, " +
                 "    data['create_time'] create_time " +
-                "from topic_db " +
+                "from ods_base_db " +
                 "where `database` = 'gmall-211126-flink' " +
                 "and `table` = 'order_detail_coupon' " +
                 "and `type` = 'insert'");

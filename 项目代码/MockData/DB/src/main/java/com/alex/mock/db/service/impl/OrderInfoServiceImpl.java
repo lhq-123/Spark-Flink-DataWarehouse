@@ -1,7 +1,7 @@
 package com.alex.mock.db.service.impl;
 
 import com.  alex.mock.db.bean.*;
-import com.  alex.mock.db.constant.GmallConstant;
+import com.alex.mock.db.constant.Constant;
 import com.  alex.mock.db.mapper.*;
 import com.  alex.mock.db.service.*;
 import com.  alex.mock.db.util.*;
@@ -101,7 +101,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderInfo.setDeliveryAddress("第"+ RandomNum.getRandInt(1,20)+"大街第"+RandomNum.getRandInt(1,40)+"号楼"+RandomNum.getRandInt(1,9)+"单元"+RandomNumString.getRandNumString(1,9,3,"")+"门");
         orderInfo.setExpireTime(DateUtils.addMinutes(date,15));
         orderInfo.setImgUrl("http://img.gmall.com/"+RandomNumString.getRandNumString(1,9,6,"")+".jpg");
-        orderInfo.setOrderStatus(GmallConstant.ORDER_STATUS_UNPAID);
+        orderInfo.setOrderStatus(Constant.ORDER_STATUS_UNPAID);
         orderInfo.setOrderComment("描述"+RandomNumString.getRandNumString(1,9,6,""));
         orderInfo.setOutTradeNo(RandomNumString.getRandNumString(1,9,15,""));
         orderInfo.setFeightFee(BigDecimal.valueOf(RandomNum.getRandInt(5,20)));

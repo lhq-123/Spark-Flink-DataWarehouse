@@ -1,6 +1,6 @@
 package com.alex.mock.db.mapper;
 
-import com.  alex.mock.db.bean.ActivityOrder;
+import com.alex.mock.db.bean.ActivityOrder;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

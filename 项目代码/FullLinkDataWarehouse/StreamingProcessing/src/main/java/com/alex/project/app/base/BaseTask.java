@@ -160,7 +160,7 @@ public abstract class BaseTask {
         Properties properties = new Properties();
         properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, ConfigLoader.get("bootstrap.servers"));
 
-        return new FlinkKafkaProducer<T>(ConfigLoader.get("kafka.dwd_topic4"),
+        return new FlinkKafkaProducer<T>(ConfigLoader.get("kafka_dwd_db"),
                 kafkaSerializationSchema,
                 properties,
                 FlinkKafkaProducer.Semantic.EXACTLY_ONCE);
@@ -201,14 +201,22 @@ public abstract class BaseTask {
      * @param topic
      * @param groupId
      * @return
+     *   scan.startup.mode:有五种消费kafka的方式
+     *                       1.earliest-offset:该模式为每次执行时从头开始消费 topic
+     *                       2.latest-offset:从最新的offset 开始消费，也就是说在任务启动之前的消息是不会被消费到的,消费时会丢失数据
+     *                       3.timestamp:指定每个分区(partition)的时间戳开始消费,设置时间戳之前的数据不会被消费
+     *                         通过 scan.startup.timestamp-millis 配置进行设置时间戳
+     *                       4.specific-offsets:指定从每个分区（partition）的某个偏移量（offset）开始消费
+     *                         设置方式: 'specific-offsets' = 'partition:0,offset:15' 表示 分区 0 从 偏移量(offset)15 开始消费消息
+     *                       5.group-offsets(默认的消费方式):从 zookeeper 或者 kafka 中某个指定的消费组已提交的偏移量开始消费
      */
     public static String getKafkaDDL(String topic, String groupId) {
-        return  " 'connector' = 'kafka', " +
-                " 'topic' = '" + topic + "'," +
-                " 'properties.bootstrap.servers' = '" + ConfigLoader.get("bootstrap.servers") + "', " +
-                " 'properties.group.id' = '" + groupId + "', " +
-                " 'format' = 'json', " +
-                " 'scan.startup.mode' = 'latest-offset'  ";
+        return  " with ('connector' = 'kafka', \n" +
+                " 'topic' = '" + topic + "', \n" +
+                " 'properties.bootstrap.servers' = '" + ConfigLoader.get("bootstrap.servers") + "',  \n" +
+                " 'properties.group.id' = '" + groupId + "',  \n" +
+                " 'format' = 'json', \n" +
+                " 'scan.startup.mode' = 'earliest-offset')";
     }
 
     /**
@@ -244,19 +252,19 @@ public abstract class BaseTask {
 
 
     /**
-     * topic_db主题的  Kafka-Source DDL 语句
+     * ods_base_db主题的  Kafka-Source DDL 语句
      *
      * @param groupId 消费者组
      * @return 拼接好的 Kafka 数据源 DDL 语句
      */
     public static String getTopicDb(String groupId) {
-        return "CREATE TABLE topic_db ( " +
+        return "CREATE TABLE ods_base_db ( " +
                 "  `database` STRING, " +
                 "  `table` STRING, " +
                 "  `type` STRING, " +
                 "  `data` MAP<STRING,STRING>, " +
                 "  `old` MAP<STRING,STRING>, " +
                 "  `pt` AS PROCTIME() " +
-                ") " + getKafkaDDL("topic_db", groupId);
+                ") " + getKafkaDDL("ods_base_db", groupId);
     }
 }

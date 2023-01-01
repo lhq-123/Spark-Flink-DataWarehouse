@@ -18,20 +18,20 @@ public class DwdUserRegister extends BaseTask{
         tableEnv.getConfig().setLocalTimeZone(ZoneId.of("GMT+8"));
 
         // TODO 3. 从 Kafka 读取业务数据，封装为 Flink SQL 表
-        tableEnv.executeSql("create table topic_db(" +
+        tableEnv.executeSql("create table ods_base_db(" +
                 "`database` string, " +
                 "`table` string, " +
                 "`type` string, " +
                 "`data` map<string, string>, " +
                 "`ts` string " +
-                ")" + BaseTask.getKafkaDDL("topic_db", "dwd_trade_order_detail"));
+                ")" + BaseTask.getKafkaDDL("ods_base_db", "dwd_trade_order_detail"));
 
         // TODO 4. 读取用户表数据
         Table userInfo = tableEnv.sqlQuery("select " +
                 "data['id'] user_id, " +
                 "data['create_time'] create_time, " +
                 "ts " +
-                "from topic_db " +
+                "from ods_base_db " +
                 "where `table` = 'user_info' " +
                 "and `type` = 'insert' ");
         tableEnv.createTemporaryView("user_info", userInfo);

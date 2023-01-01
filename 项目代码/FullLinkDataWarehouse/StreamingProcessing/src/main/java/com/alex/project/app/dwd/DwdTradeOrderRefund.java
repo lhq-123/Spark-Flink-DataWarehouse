@@ -22,8 +22,8 @@ public class DwdTradeOrderRefund extends BaseTask {
         //设置状态的TTL  设置为最大乱序程度
         tableEnv.getConfig().setIdleStateRetention(Duration.ofSeconds(5));
 
-        // TODO 3. 从 Kafka 读取 topic_db 数据，封装为 Flink SQL 表
-        tableEnv.executeSql("create table topic_db(" +
+        // TODO 3. 从 Kafka 读取 ods_base_db 数据，封装为 Flink SQL 表
+        tableEnv.executeSql("create table ods_base_db(" +
                 "`database` string, " +
                 "`table` string, " +
                 "`type` string, " +
@@ -31,7 +31,7 @@ public class DwdTradeOrderRefund extends BaseTask {
                 "`old` map<string, string>, " +
                 "`proc_time` as PROCTIME(), " +
                 "`ts` string " +
-                ")" + BaseTask.getKafkaDDL("topic_db", "order_refund"));
+                ")" + BaseTask.getKafkaDDL("ods_base_db", "order_refund"));
 
         // TODO 4. 读取退单表数据
         Table orderRefundInfo = tableEnv.sqlQuery("select " +
@@ -47,7 +47,7 @@ public class DwdTradeOrderRefund extends BaseTask {
                 "data['create_time'] create_time, " +
                 "proc_time, " +
                 "ts " +
-                "from topic_db " +
+                "from ods_base_db " +
                 "where `table` = 'order_refund_info' " +
                 "and `type` = 'insert' ");
         tableEnv.createTemporaryView("order_refund_info", orderRefundInfo);
@@ -57,7 +57,7 @@ public class DwdTradeOrderRefund extends BaseTask {
                 "data['id'] id, " +
                 "data['province_id'] province_id, " +
                 "`old` " +
-                "from topic_db " +
+                "from ods_base_db " +
                 "where `table` = 'order_info' " +
                 "and `type` = 'update' " +
                 "and data['order_status']='1005' " +

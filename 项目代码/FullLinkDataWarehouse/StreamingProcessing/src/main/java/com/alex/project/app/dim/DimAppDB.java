@@ -10,8 +10,11 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.serialization.SerializationSchema;
 import org.apache.flink.api.common.state.MapStateDescriptor;
+import org.apache.flink.api.java.io.TextInputFormat;
+import org.apache.flink.core.fs.Path;
 import org.apache.flink.streaming.api.datastream.*;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.source.FileProcessingMode;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 import org.apache.flink.streaming.connectors.kafka.KafkaSerializationSchema;
 import org.apache.flink.util.OutputTag;
@@ -35,7 +38,11 @@ public class DimAppDB extends BaseTask {
         //主流
         DataStreamSource<String> kafkaDS = env.addSource(BaseTask.getKafkaSource(ConfigLoader.get("kafka_ods_db"), ConfigLoader.get("group_ods_db")));
         //配置流
-        DataStreamSource<String> configDS = env.readTextFile(ConfigLoader.get("hdfsUri") + "/FlinkCarDataSource/table_process.txt");
+        //DataStreamSource<String> configDS = env.readTextFile(ConfigLoader.get("hdfsUri") + "/FlinkCarDataSource/table_process.txt");
+        //读取本地的table_process数据,每隔10s中读取 新增文件内容
+        DataStreamSource<String> configDS = env.readFile(new TextInputFormat(new Path()), "C:\\Users\\admin\\Desktop\\Flink+Spark大型数仓\\Spark-Flink-data-warehouse\\项目代码\\FullLinkDataWarehouse\\StreamingProcessing\\src\\main\\java\\com\\alex\\project\\app\\ods\\table_process.txt"
+                , FileProcessingMode.PROCESS_CONTINUOUSLY, 10);
+
         //TODO 3）将主流的每行数据转换为JSON对象并过滤(delete)
         SingleOutputStreamOperator<JSONObject> jsonObjDS = kafkaDS.map(JSON::parseObject)
                 .filter(new FilterFunction<JSONObject>() {
@@ -47,7 +54,7 @@ public class DimAppDB extends BaseTask {
                     }
                 });
         //jsonObjDS.print("过滤后的主流数据:");
-        //configDS.print("配置流数据:");
+        configDS.print("配置流数据:");
         //TODO 4）读取配置信息封装成流->广播流
         MapStateDescriptor<String, TableProcess> mapStateDescriptor = new MapStateDescriptor<>("map-state", String.class, TableProcess.class);
         BroadcastStream<String> broadcastStream = configDS.broadcast(mapStateDescriptor);

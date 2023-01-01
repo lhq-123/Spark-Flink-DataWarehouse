@@ -2,6 +2,7 @@ package com.alex.project.common;
 
 import com.alex.project.bean.TableProcess;
 import com.alex.project.bean.PhoenixConfig;
+import com.alex.project.utils.ConfigLoader;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.flink.api.common.state.BroadcastState;
@@ -39,6 +40,7 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject, S
     @Override
     public void open(Configuration parameters) throws Exception {
         Class.forName(PhoenixConfig.PHOENIX_DRIVER);
+        //Class.forName(ConfigLoader.get("clickhouse.driver"));
         connection = DriverManager.getConnection(PhoenixConfig.PHOENIX_SERVER);
     }
 

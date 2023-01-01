@@ -2,14 +2,13 @@ package com.alex.mock.db.service.impl;
 
 import com.  alex.mock.db.bean.CartInfo;
 import com.  alex.mock.db.bean.SkuInfo;
-import com.  alex.mock.db.constant.GmallConstant;
+import com.alex.mock.db.constant.Constant;
 import com.  alex.mock.db.mapper.CartInfoMapper;
 import com.  alex.mock.db.mapper.UserInfoMapper;
 import com.  alex.mock.db.service.CartInfoService;
 import com.  alex.mock.db.service.SkuInfoService;
 import com.  alex.mock.db.util.ParamUtil;
 import com.  alex.mock.db.util.RandomNum;
-import com.  alex.mock.db.util.RandomNumString;
 import com.  alex.mock.db.util.RandomOptionGroup;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -84,10 +83,10 @@ public class CartInfoServiceImpl extends ServiceImpl<CartInfoMapper, CartInfo> i
         Integer skuCount = ParamUtil.checkCount(skuMaxCountPerCart);
 
         Integer[] sourceTypeRateArray = ParamUtil.checkRate(this.sourceTypeRate,4);
-        RandomOptionGroup sourceTypeGroup = RandomOptionGroup.builder().add(GmallConstant.SOURCE_TYPE_QUREY, sourceTypeRateArray[0])
-                .add(GmallConstant.SOURCE_TYPE_PROMOTION, sourceTypeRateArray[1])
-                .add(GmallConstant.SOURCE_TYPE_AUTO_RECOMMEND, sourceTypeRateArray[2])
-                .add(GmallConstant.SOURCE_TYPE_ACTIVITY, sourceTypeRateArray[3]).build();
+        RandomOptionGroup sourceTypeGroup = RandomOptionGroup.builder().add(Constant.SOURCE_TYPE_QUREY, sourceTypeRateArray[0])
+                .add(Constant.SOURCE_TYPE_PROMOTION, sourceTypeRateArray[1])
+                .add(Constant.SOURCE_TYPE_AUTO_RECOMMEND, sourceTypeRateArray[2])
+                .add(Constant.SOURCE_TYPE_ACTIVITY, sourceTypeRateArray[3]).build();
         String sourceType = sourceTypeGroup.getRandStringValue();
 
 
@@ -101,9 +100,9 @@ public class CartInfoServiceImpl extends ServiceImpl<CartInfoMapper, CartInfo> i
         cartInfo.setSkuNum(RandomNum.getRandInt(1,skuCount)+0L);
         cartInfo.setCreateTime(date);
         cartInfo.setSourceType(sourceType);
-        if(sourceType.equals(GmallConstant.SOURCE_TYPE_PROMOTION)){
+        if(sourceType.equals(Constant.SOURCE_TYPE_PROMOTION)){
             cartInfo.setSourceId(RandomNum.getRandInt(10,100)+0L);
-        }else if (sourceType.equals(GmallConstant.SOURCE_TYPE_ACTIVITY)){
+        }else if (sourceType.equals(Constant.SOURCE_TYPE_ACTIVITY)){
             cartInfo.setSourceId(RandomNum.getRandInt(1,2)+0L);
         }
 
