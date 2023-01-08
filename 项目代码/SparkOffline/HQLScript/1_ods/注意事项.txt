@@ -1,0 +1,14 @@
+1.SQL脚本为了复用性强可以使用参数
+如果使用SparkSQL的话是可以使用set在SQL脚本里传参数的，但是在hive on spark里是不支持的，例如:
+SET DB_LOCATION=hdfs://Flink01:8020/spark/gmall;
+create database aaa location '$DB_LOCATION';
+
+2.在DML加载数据的时候
+因为是T+1嘛，所以如果在加载数据的时候没有输入日期的话。默认是当前日期的前一天
+如果是为了测试要重复加载数据的话，最好还是带上时间
+
+3.Shell脚本调用SQL脚本时
+因为是在shell脚本里调用，所以就使用的是hive -e "sql"
+如果想使用sql脚本文件的话，可以在sql脚本里加参数，然后在shell脚本里调用，例如:
+SELECT * FROM ${hiveconf:tablename} limit ${hiveconf:var_rows};
+hive -hiveconf tablename='t1' -hiveconf var_rows=10 -f test.sql
