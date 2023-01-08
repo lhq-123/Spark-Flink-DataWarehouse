@@ -1,5 +1,4 @@
 #!/bin/bash
-
 python ~/bin/gen_export_config.py -d gmall_report -t ads_activity_stats
 python ~/bin/gen_export_config.py -d gmall_report -t ads_coupon_stats
 python ~/bin/gen_export_config.py -d gmall_report -t ads_new_buyer_stats

@@ -35,7 +35,6 @@ export_data() {
   fi
 }
 
-
 case $1 in
   "ads_new_buyer_stats")
     export_data /opt/module/datax/job/export/gmall_report.ads_new_buyer_stats.json hdfs://Flink01:8020/spark/gmall/ads/ads_new_buyer_stats

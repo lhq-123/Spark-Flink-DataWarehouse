@@ -1,10 +1,10 @@
-# 为方便报表应用使用数据，需将ads各指标的统计结果导出到MySQL数据库中
+-- 为方便报表应用使用数据，需将ads各指标的统计结果导出到MySQL数据库中
 
-# 创建数据库
+--  创建数据库
 CREATE DATABASE IF NOT EXISTS gmall_report DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 
-# 创建表
-# 各活动补贴率
+--  创建表
+--  各活动补贴率
 DROP TABLE IF EXISTS `ads_activity_stats`;
 CREATE TABLE `ads_activity_stats`  (
                                        `dt` date NOT NULL COMMENT '统计日期',
@@ -14,7 +14,7 @@ CREATE TABLE `ads_activity_stats`  (
                                        `reduce_rate` decimal(16, 2) NULL DEFAULT NULL COMMENT '补贴率',
                                        PRIMARY KEY (`dt`, `activity_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '活动统计' ROW_FORMAT = Dynamic;
-# 各优惠券补贴率
+--  各优惠券补贴率
 DROP TABLE IF EXISTS `ads_coupon_stats`;
 CREATE TABLE `ads_coupon_stats`  (
                                      `dt` date NOT NULL COMMENT '统计日期',
@@ -25,7 +25,7 @@ CREATE TABLE `ads_coupon_stats`  (
                                      `reduce_rate` decimal(16, 2) NULL DEFAULT NULL COMMENT '补贴率',
                                      PRIMARY KEY (`dt`, `coupon_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '优惠券统计' ROW_FORMAT = Dynamic;
-# 新增交易用户统计
+--  新增交易用户统计
 DROP TABLE IF EXISTS `ads_new_buyer_stats`;
 CREATE TABLE `ads_new_buyer_stats`  (
                                         `dt` date NOT NULL COMMENT '统计日期',
@@ -34,7 +34,7 @@ CREATE TABLE `ads_new_buyer_stats`  (
                                         `new_payment_user_count` bigint(20) NULL DEFAULT NULL COMMENT '新增支付人数',
                                         PRIMARY KEY (`dt`, `recent_days`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '新增交易用户统计' ROW_FORMAT = Dynamic;
-# 各省份订单统计
+-- 各省份订单统计
 DROP TABLE IF EXISTS `ads_order_by_province`;
 CREATE TABLE `ads_order_by_province`  (
                                           `dt` date NOT NULL COMMENT '统计日期',
@@ -48,7 +48,7 @@ CREATE TABLE `ads_order_by_province`  (
                                           `order_total_amount` decimal(16, 2) NULL DEFAULT NULL COMMENT '订单金额',
                                           PRIMARY KEY (`dt`, `recent_days`, `province_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '各地区订单统计' ROW_FORMAT = Dynamic;
-# 用户路径分析
+-- 用户路径分析
 DROP TABLE IF EXISTS `ads_page_path`;
 CREATE TABLE `ads_page_path`  (
                                   `dt` date NOT NULL COMMENT '统计日期',
@@ -58,7 +58,7 @@ CREATE TABLE `ads_page_path`  (
                                   `path_count` bigint(20) NULL DEFAULT NULL COMMENT '跳转次数',
                                   PRIMARY KEY (`dt`, `recent_days`, `source`, `target`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '页面浏览路径分析' ROW_FORMAT = Dynamic;
-# 各品牌复购率
+-- 各品牌复购率
 DROP TABLE IF EXISTS `ads_repeat_purchase_by_tm`;
 CREATE TABLE `ads_repeat_purchase_by_tm`  (
                                               `dt` date NOT NULL COMMENT '统计日期',
@@ -68,7 +68,7 @@ CREATE TABLE `ads_repeat_purchase_by_tm`  (
                                               `order_repeat_rate` decimal(16, 2) NULL DEFAULT NULL COMMENT '复购率',
                                               PRIMARY KEY (`dt`, `recent_days`, `tm_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '各品牌复购率统计' ROW_FORMAT = Dynamic;
-# 各品类商品购物车存量topN
+-- 各品类商品购物车存量topN
 DROP TABLE IF EXISTS `ads_sku_cart_num_top3_by_cate`;
 CREATE TABLE `ads_sku_cart_num_top3_by_cate`  (
                                                   `dt` date NOT NULL COMMENT '统计日期',
@@ -84,7 +84,7 @@ CREATE TABLE `ads_sku_cart_num_top3_by_cate`  (
                                                   `rk` bigint(20) NULL DEFAULT NULL COMMENT '排名',
                                                   PRIMARY KEY (`dt`, `sku_id`, `category1_id`, `category2_id`, `category3_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '各分类商品购物车存量Top10' ROW_FORMAT = Dynamic;
-# 交易综合统计
+-- 交易综合统计
 DROP TABLE IF EXISTS `ads_trade_stats`;
 CREATE TABLE `ads_trade_stats`  (
                                     `dt` date NOT NULL COMMENT '统计日期',
@@ -96,7 +96,7 @@ CREATE TABLE `ads_trade_stats`  (
                                     `order_refund_user_count` bigint(20) NULL DEFAULT NULL COMMENT '退单人数',
                                     PRIMARY KEY (`dt`, `recent_days`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '交易统计' ROW_FORMAT = Dynamic;
-# 各品类商品交易统计
+-- 各品类商品交易统计
 DROP TABLE IF EXISTS `ads_trade_stats_by_cate`;
 CREATE TABLE `ads_trade_stats_by_cate`  (
                                             `dt` date NOT NULL COMMENT '统计日期',
@@ -113,7 +113,7 @@ CREATE TABLE `ads_trade_stats_by_cate`  (
                                             `order_refund_user_count` bigint(20) NULL DEFAULT NULL COMMENT '退单人数',
                                             PRIMARY KEY (`dt`, `recent_days`, `category1_id`, `category2_id`, `category3_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '各分类商品交易统计' ROW_FORMAT = Dynamic;
-# 各品牌商品交易统计
+-- 各品牌商品交易统计
 DROP TABLE IF EXISTS `ads_trade_stats_by_tm`;
 CREATE TABLE `ads_trade_stats_by_tm`  (
                                           `dt` date NOT NULL COMMENT '统计日期',
@@ -126,7 +126,7 @@ CREATE TABLE `ads_trade_stats_by_tm`  (
                                           `order_refund_user_count` bigint(20) NULL DEFAULT NULL COMMENT '退单人数',
                                           PRIMARY KEY (`dt`, `recent_days`, `tm_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '各品牌商品交易统计' ROW_FORMAT = Dynamic;
-# 各渠道流量统计
+-- 各渠道流量统计
 DROP TABLE IF EXISTS `ads_traffic_stats_by_channel`;
 CREATE TABLE `ads_traffic_stats_by_channel`  (
                                                  `dt` date NOT NULL COMMENT '统计日期',
@@ -139,7 +139,7 @@ CREATE TABLE `ads_traffic_stats_by_channel`  (
                                                  `bounce_rate` decimal(16, 2) NULL DEFAULT NULL COMMENT '跳出率',
                                                  PRIMARY KEY (`dt`, `recent_days`, `channel`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '各渠道流量统计' ROW_FORMAT = Dynamic;
-# 用户行为漏斗分析
+-- 用户行为漏斗分析
 DROP TABLE IF EXISTS `ads_user_action`;
 CREATE TABLE `ads_user_action`  (
                                     `dt` date NOT NULL COMMENT '统计日期',
@@ -151,7 +151,7 @@ CREATE TABLE `ads_user_action`  (
                                     `payment_count` bigint(20) NULL DEFAULT NULL COMMENT '支付人数',
                                     PRIMARY KEY (`dt`, `recent_days`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '漏斗分析' ROW_FORMAT = Dynamic;
-# 用户变动统计
+-- 用户变动统计
 DROP TABLE IF EXISTS `ads_user_change`;
 CREATE TABLE `ads_user_change`  (
                                     `dt` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '统计日期',
@@ -159,7 +159,7 @@ CREATE TABLE `ads_user_change`  (
                                     `user_back_count` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '回流用户数',
                                     PRIMARY KEY (`dt`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户变动统计' ROW_FORMAT = Dynamic;
-# 用户留存率
+-- 用户留存率
 DROP TABLE IF EXISTS `ads_user_retention`;
 CREATE TABLE `ads_user_retention`  (
                                        `dt` date NOT NULL COMMENT '统计日期',
@@ -170,7 +170,7 @@ CREATE TABLE `ads_user_retention`  (
                                        `retention_rate` decimal(16, 2) NULL DEFAULT NULL COMMENT '留存率',
                                        PRIMARY KEY (`dt`, `create_date`, `retention_day`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '留存率' ROW_FORMAT = Dynamic;
-# 用户新增活跃统计
+-- 用户新增活跃统计
 DROP TABLE IF EXISTS `ads_user_stats`;
 CREATE TABLE `ads_user_stats`  (
                                    `dt` date NOT NULL COMMENT '统计日期',
