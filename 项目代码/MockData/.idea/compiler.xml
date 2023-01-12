@@ -7,6 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="Mock.v1" />
         <module name="Logger" />
         <module name="Log" />
         <module name="DB" />
@@ -24,6 +25,7 @@
       <module name="FlinkCDC" options="-parameters" />
       <module name="Log" options="-parameters" />
       <module name="Logger" options="" />
+      <module name="Mock.v1" options="-parameters" />
     </option>
   </component>
 </project>

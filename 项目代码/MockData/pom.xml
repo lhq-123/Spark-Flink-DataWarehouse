@@ -24,6 +24,7 @@
         <module>Common</module>
         <module>DB</module>
         <module>Log</module>
+        <module>Mock.v1</module>
     </modules>
 
 <dependencies>

@@ -20,22 +20,6 @@ public class DwdTradeRefundPaySuc extends BaseTask{
         //设置状态的TTL  设置为最大乱序程度
         tableEnv.getConfig().setIdleStateRetention(Duration.ofSeconds(905));
 
-        // TODO 2. 状态后端设置
-//        env.enableCheckpointing(3000L, CheckpointingMode.EXACTLY_ONCE);
-//        env.getCheckpointConfig().setMinPauseBetweenCheckpoints(3000L);
-//        env.getCheckpointConfig().setCheckpointTimeout(60 * 1000L);
-//        env.getCheckpointConfig().enableExternalizedCheckpoints(
-//                CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION
-//        );
-//        env.setRestartStrategy(RestartStrategies.failureRateRestart(
-//                3, Time.days(1), Time.minutes(1)
-//        ));
-//        env.setStateBackend(new HashMapStateBackend());
-//        env.getCheckpointConfig().setCheckpointStorage(
-//                "hdfs://hadoop102:8020/ck"
-//        );
-//        System.setProperty("HADOOP_USER_NAME", "atguigu");
-
         // TODO 3. 从 Kafka 读取 ods_base_db 数据，封装为 Flink SQL 表
         tableEnv.executeSql("create table ods_base_db(" +
                 "`database` string, " +

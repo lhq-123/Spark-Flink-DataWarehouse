@@ -68,9 +68,9 @@ public abstract class BaseTask {
         //  TODO 4.2）设置检查点的model、exactly-once、保证数据一次性语义
         env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
         //  TODO 4.3）设置两次checkpoint的时间间隔，避免两次间隔太近导致频繁的checkpoint，而出现业务处理能力下降
-        env.getCheckpointConfig().setMinPauseBetweenCheckpoints(20 * 1000);
+        env.getCheckpointConfig().setMinPauseBetweenCheckpoints(30 * 1000);
         //  TODO 4.4）设置checkpoint的超时时间
-        env.getCheckpointConfig().setCheckpointTimeout(20 * 1000);
+        env.getCheckpointConfig().setCheckpointTimeout(60 * 1000);
         //  TODO 4.5）设置checkpoint的最大尝试次数，同一个时间有几个checkpoint在运行
         env.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
         //  TODO 4.6）设置checkpoint取消的时候，是否保留checkpoint，checkpoint默认会在job取消的时候删除checkpoint
@@ -83,6 +83,8 @@ public abstract class BaseTask {
         //TODO 5）设置任务的重启策略（固定延迟重启策略、失败率重启策略、无重启策略）
         //  TODO 5.1）如果开启了checkpoint，默认不停的重启，没有开启checkpoint，无重启策略
         env.setRestartStrategy(RestartStrategies.fallBackRestart());
+        //env.setRestartStrategy(RestartStrategies.failureRateRestart(3, Time.days(1), Time.minutes(1)));
+        System.setProperty("HADOOP_USER_NAME", "root");
         appName = className;
         //返回env对象
         return env;
